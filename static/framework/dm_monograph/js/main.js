@@ -687,6 +687,17 @@ var PROBLEMS_get = function(){
   }).promise();
 };
 
+var GENOMICS_get = function(){
+  return $.Deferred(function(dfd){
+  
+
+        $('<div></div>', {text: 'None known'}).css('padding-left', '12px').appendTo('#genomics_test');
+
+
+        dfd.resolve();
+  }).promise();
+}
+
 // On SMART.ready, do all the data api calls and synchronize
 // when they are all complete.
 SMART.ready(function(){
@@ -697,9 +708,10 @@ SMART.ready(function(){
    , LAB_RESULTS_get()
    , PROBLEMS_get()
    , MEDICATIONS_get()
+   , GENOMICS_get()
   )
   .then(function(){
-
+     
     // main demo info
     $('.family_name').text(pt.family_name)
     $('.given_name').text(pt.given_name)
@@ -707,8 +719,7 @@ SMART.ready(function(){
     $('.birthday').text(pt.bday)
     var b = new XDate(pt.bday)
     $('.age').text(Math.round(b.diffYears(new XDate())));
-    $('.gender').text(pt.gender[0])
-
+    $('.gender').text(pt.gender[0]) 
     $('#bp_date_ps').text(pt.sbp ? new XDate(pt.sbp[0]).toString('MM/dd/yy') : '')
     $('#ldl_date_ps').text(pt.ldl ? new XDate(pt.ldl[0]).toString('MM/dd/yy') : '')
     $('#a1c_date_ps').text(pt.a1c ? new XDate(pt.a1c[0]).toString('MM/dd/yy') : '')
