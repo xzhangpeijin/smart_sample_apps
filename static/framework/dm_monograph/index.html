@@ -54,17 +54,19 @@
       </div>
 
       <div class='demo_line' style='font-weight: normal !important; font-size: 14px;'>
-        <div style='width: 48%; float: left'>
+        <div style='width: 38%; float: left'>
           <span class='demo_line_label'>DOB</span> <span class='birthday'></span>&nbsp;&nbsp;
           <span class='demo_line_label'>AGE</span> <span class='age'></span>&nbsp;&nbsp;
           <span class='demo_line_label'>SEX</span> <span class='gender'></span>&nbsp;&nbsp;
         </div>
-        <div style='float: left; width: 48%; text-align: right; font-size: small;'>
+        <div style='float: left; width: 60%; text-align: right; font-size: small;'>
           <a rel='#pt_summary' id='show_pt_summary_overlay'/>Patient Summary</a>
           &middot;
           <a rel='#explainer' id='show_explainer_overlay'/>App Explainer</a>
           &middot;
           <a rel='#timeline' id='show_timeline_overlay'/>Time Line</a>
+	  &middot;
+          <a rel='#genomics_advisor' id='show_genomics_overlay' />Genomics Advisor </a>
         </div>
       </div>
 
@@ -76,7 +78,22 @@
         </div>
 
         <div id='bp_graph'></div>
+<div class = 'clear'></div>
+<div class='section_header'>
+          Genomics Advisor
+	</div>
+	
+	<div>
+		<div style='width: 60%; float: left; text-align: left;'> <b>Data format: </b> </div>
+		<div style='width: 35%; float: left; text-align: right;'> 23andme </div>
+	</div>
 
+	<div class='gray'>
+		<div style='width: 60%; float: left; text-align: left;'> <b>Date Sequenced:</b> </div>
+		<div style='width: 35%; float: left; text-align: right;'> 5/23/09 </div>
+	</div>
+
+<div class = 'clear'></div>
         <div class='section_header'>
           <div style='width: 60%; float: left'>Last Known Values</div>
           <div style='width: 38%; float: left; text-align: right'>
@@ -92,7 +109,7 @@
           </div>
           <div class='smaller'>0-135</div>
 
-          <div class='gray'>
+          <div class='gray' style='margin-top: -1px;'>
             <span class='test_name'>&micro;alb/cre</span>
             <span class='smaller' id='m_alb_cre_ratio_unit'></span>
           </div>
@@ -104,7 +121,7 @@
           </div>
           <div class='smaller'>10-40</div>
 
-          <div class='gray'>
+          <div class='gray' style='margin-top: -1px;'>
             <span class='test_name'>Chol</span>
             <span class='smaller' id='chol_total_unit'></span>
           </div>
@@ -116,7 +133,7 @@
           </div>
           <div class='smaller'>&lt;&thinsp;150</div>
 
-          <div class='gray'>
+          <div class='gray' style='margin-top: -1px;'>
             <span class='test_name'>HDL</span>
             <span class='smaller' id='hdl_unit'></span>
           </div>
@@ -128,7 +145,7 @@
           </div>
           <div class='smaller'>&lt;&thinsp;100</div>
 
-          <div class='gray'>
+          <div class='gray' style='margin-top: -1px;'>
             <span class='test_name'>BUN</span>
             <span class='smaller' id='bun_unit'></span>
           </div>
@@ -140,7 +157,7 @@
           </div>
           <div class='smaller'>0.6-1.5</div>
 
-          <div class='gray'>
+          <div class='gray' style='margin-top: -1px;'>
             <span class='test_name'>Glu</span>
             <span class='smaller' id='glucose_unit'></span>
           </div>
@@ -230,7 +247,8 @@
           <div>
             <span id='a1c_date'>&nbsp;</span>
           </div>
-        </div>
+        
+	</div>
 
         <div class="grid_1 omega" style='width: 31%; margin-left: 0px;'>
           <div>
@@ -411,17 +429,16 @@
       <div id='column_3' class='grid_6'>
         <div>
           <div class='section_header' style='width: 48%; float: left'> A1C <span class='normal smaller'>goal <span class='medium'>&lt; 7%</span></span></div>
-
+<div class='section_header' style='width: 48%; float: right; text-align: left;'> Genomics Visualization </div>
           <div class='clear'></div>
 
         <div style='height: 100px; width:49%; float: left;'>
           <div id='a1c_graph'></div>
         </div>
 
-          <div style='width: 48%; float: left; text-align: center; margin-top: -8px; margin-left: auto; margin-right: auto;'>
+          <div style='width: 48%; float: right; text-align: center; margin-top: 0px; margin-left: auto; margin-right: auto;'>
             <div>
-              <img class='mode_button' style='width: 80px; margin: none' id='sort_by_date' src='./assets/alpha_mode.png' />
-              <img class='mode_button' style='width: 80px; margin: none; display: none' id='sort_by_alpha' style='display: none' src='./assets/chrono_mode.png' />
+              <img src="./assets/DM_Graph.png" height="95">
             </div>
           </div>
         </div>
@@ -442,6 +459,169 @@
           <div class='section_header'>Medications <span id='meds_as_of'></span></div>
           <div id='medications'></div>
         </div>
+	
+	<div id='genomics_outer'>
+          <div class='section_header'>Genomics Data</div>
+
+		<div class='section_subheader'> Relative Risks </div>
+		<div>
+			<div style='width: 40%; float: left; text-align: left;'><b> Diabetes Mellitus: </b> </div>
+			<div style='width: 60%; float: left; text-align: left;'><font color='#ff0000'> 2.13 (Consider checking blood glucose levels)</font></div>
+		</div>
+
+		<div>
+			<div style='width: 40%; float: left; text-align: left;'><b> Coronary Heart Disease: </b> </div>
+			<div style='width: 60%; float: left; text-align: left;'> 1.43 </div>
+		</div>
+		
+		<div>
+			<div style='width: 40%; float: left; text-align: left;'><b> Cerebrovascular Disease: </b> </div>
+			<div style='width: 60%; float: left; text-align: left;'><font color='#e56000'> 1.89 (Consider perscribing anticoagulants)</font></div>
+		</div>
+		
+		<div>
+		
+		        <div style='width: 40%; float: left; text-align: left;'><b> Hypertension: </b> </div>
+			<div style='width: 60%; float: left; text-align: left;'> 1.14 </div>
+			
+		</div>
+
+
+	<div class='clear'> </div>
+
+            <div class='section_subheader'>
+	    SNP
+	    <div style='width: 17%; float: right; text-align: right; margin-right: 5px'>Frequency</div>
+	    <div style='width: 15%; float: right; text align: left;'> Risk </div>
+	    <div style='width: 12%; float: right; text align: left;'> Code </div>
+	    <div style='width: 20%; float: right; text align: left;'> Chromosome </div>
+	    <div style='width: 16%; float: right; text align: left; margin-left: 1px'> Locus </div>
+            </div>
+          </div>
+	
+	  <div>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> RS5524341 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> RS/RF2 </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 5 </div>
+            	<div style='width: 12%; float: left; text align: left;'> AT </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 1.59 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 4.4% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+          <div class='gray'>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> R490038412 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> INS/P2G </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 14 </div>
+            	<div style='width: 12%; float: left; text align: left;'> GG </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 1.29 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 24.7% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+	  <div>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> RS4123455 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> INF/PG2 </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 6 </div>
+            	<div style='width: 12%; float: left; text align: left;'> CG </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 0.89 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 14.4% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+          <div class='gray'>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> RS4991524 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> C4FGP </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 11 </div>
+            	<div style='width: 12%; float: left; text align: left;'> AG </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 0.91 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 89.2% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+	  <div>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> RS2241053 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> AGPF </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 8 </div>
+            	<div style='width: 12%; float: left; text align: left;'> AT </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 1.52 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 7.5% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+          <div class='gray'>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> RS6124992 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> ASP4M </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 5 </div>
+            	<div style='width: 12%; float: left; text align: left;'> CC </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 0.77 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 22.7% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+	
+	  <div>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> RS5524341 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> RS/RF2 </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 5 </div>
+            	<div style='width: 12%; float: left; text align: left;'> AT </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 1.59 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 4.4% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+          <div class='gray'>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> R490038412 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> INS/P2G </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 14 </div>
+            	<div style='width: 12%; float: left; text align: left;'> GG </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 1.29 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 24.7% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+	  <div>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> RS4123455 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> INF/PG2 </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 6 </div>
+            	<div style='width: 12%; float: left; text align: left;'> CG </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 0.89 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 14.4% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+          <div class='gray'>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> RS4991524 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> C4FGP </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 11 </div>
+            	<div style='width: 12%; float: left; text align: left;'> AG </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 0.91 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 89.2% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+	  <div>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> RS2241053 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> AGPF </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 8 </div>
+            	<div style='width: 12%; float: left; text align: left;'> AT </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 1.52 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 7.5% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+          <div class='gray'>
+           	<div style='width: 20%; float: left; text align: left; margin-left: 2px'> RS6124992 </div>
+	    	<div style='width: 16%; float: left; text align: left; margin-left: -2px'> ASP4M </div>
+	   	<div style='width: 20%; float: left; text align: left;'> 5 </div>
+            	<div style='width: 12%; float: left; text align: left;'> CC </div>
+	    	<div style='width: 15%; float: left; text align: left;'> 0.77 </div>
+		<div style='width: 10%; float: right; text-align: right; margin-right: 5px'> 22.7% </div>
+		<div class='clear'></div>		  
+	  </div>
+
+        </div>
+
       </div>
     </div>
 
