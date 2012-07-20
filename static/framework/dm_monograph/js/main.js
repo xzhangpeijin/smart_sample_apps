@@ -689,11 +689,35 @@ var PROBLEMS_get = function(){
 
 var GENOMICS_get = function(){
   return $.Deferred(function(dfd){
-  
+        $.ajax({
+                url: 'js/1.json',
+                datatype: 'json',
+                success: function(data) {
+                var genomics_text = "<div>"
+                genomics_text += "<div style='width: 20%; float: left; text align: left; margin-left: 2px'>"
+                genomics_text += data.snp.name.toUpperCase()
+                genomics_text += "</div> <div style='width: 16%; float: left; text align: left; margin-left: -2px'>"
+                genomics_text += "Locus"
+                genomics_text += "</div> <div style='width: 20%; float: left; text align: left;'>"
+                genomics_text += data.snp.chromosome
+                genomics_text += "</div> <div style='width: 12%; float: left; text align: left;'>"
+                genomics_text += data.user.genotypes.local_genotype
+                genomics_text += "</div> <div style='width: 15%; float: left; text align: left;'>"
+                genomics_text += " 1.59 "
+                genomics_text += "</div> <div style='width: 10%; float: right; text-align: right; margin-right: 5px'>"
+                genomics_text += "4.4%"
+		genomics_text += "</div> <div class='clear'></div> </div>"
 
-        $('<div></div>', {text: 'None known'}).css('padding-left', '12px').appendTo('#genomics_test');
-
-
+                document.getElementById("genomics_test").innerHTML=genomics_text
+                alert(data.snp.chromosome);
+                },
+                
+                error: function(xhr, ajaxoptions, error) {
+                
+                alert("err " + xhr + error);
+                }
+                
+	});
         dfd.resolve();
   }).promise();
 }
@@ -901,12 +925,13 @@ SMART.ready(function(){
     }
 
     var do_stripes = function(){
-      $('.cv_comorbidity, .allergy, .problem, .medication, .reminder').removeClass('gray');
+      $('.cv_comorbidity, .allergy, .problem, .medication, .reminder, .genomics_test').removeClass('gray');
       $('.cv_comorbidity').filter(':odd').each(function(i,e){ $(e).addClass('gray'); })
       $('.allergy').filter(':odd').each(function(i,e){ $(e).addClass('gray'); })
       $('.problem').filter(':odd').each(function(i,e){ $(e).addClass('gray'); })
       $('.medication').filter(':odd').each(function(i,e){ $(e).addClass('gray'); })
       $('.reminder').filter(':odd').each(function(i,e){ $(e).addClass('gray'); })
+      $('.genomics_test').filter(':odd').each(function(i,e){ $(e).addClass('gray'); })
     }
 
     // (some) cv comorbidities
