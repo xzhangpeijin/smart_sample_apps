@@ -689,35 +689,39 @@ var PROBLEMS_get = function(){
 
 var GENOMICS_get = function(){
   return $.Deferred(function(dfd){
+        // t1d, t2d, hyp, chd
+        var array = new Array(4);
+        array[0] = new Array(27);
+        array[1] = new Array(17);
+        array[2] = new Array(6);
+        array[3] = new Array(8);
+        
         $.ajax({
-                url: 'js/1.json',
-                datatype: 'json',
-                success: function(data) {
-                var genomics_text = "<div>"
-                genomics_text += "<div style='width: 20%; float: left; text align: left; margin-left: 2px'>"
-                genomics_text += data.snp.name.toUpperCase()
-                genomics_text += "</div> <div style='width: 16%; float: left; text align: left; margin-left: -2px'>"
-                genomics_text += "Locus"
-                genomics_text += "</div> <div style='width: 20%; float: left; text align: left;'>"
-                genomics_text += data.snp.chromosome
-                genomics_text += "</div> <div style='width: 12%; float: left; text align: left;'>"
-                genomics_text += data.user.genotypes.local_genotype
-                genomics_text += "</div> <div style='width: 15%; float: left; text align: left;'>"
-                genomics_text += " 1.59 "
-                genomics_text += "</div> <div style='width: 10%; float: right; text-align: right; margin-right: 5px'>"
-                genomics_text += "4.4%"
-		genomics_text += "</div> <div class='clear'></div> </div>"
-
-                document.getElementById("genomics_test").innerHTML=genomics_text
-                alert(data.snp.chromosome);
-                },
-                
-                error: function(xhr, ajaxoptions, error) {
-                
-                alert("err " + xhr + error);
+            type: "GET",
+            url: "SNPData.csv",
+            dataType: "text",
+            success: function(data) {
+                var allLines = data.split(/\r\n|\n/)
+                var count = 0;
+                var snpcount = 0;
+                for(var x = 2; x < allLines.length; x++)
+                {
+                    var temp = allLines[x].split(',');
+                    if(temp.length < 4)
+                    {
+                        count++;
+                        snpcount = 0;
+                    }
+                    else
+                    {
+                        array[count][snpcount] = temp;
+                        snpcount++;
+                    }
                 }
-                
-	});
+                return array;
+            }
+        });
+        alert(array[0][0][0]);
         dfd.resolve();
   }).promise();
 }
