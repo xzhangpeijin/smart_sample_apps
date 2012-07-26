@@ -718,10 +718,35 @@ var GENOMICS_get = function(){
                         snpcount++;
                     }
                 }
-                return array;
+                
+                for(var x = 0; x < 27; x++)
+                {
+                 
+                
+                }
+                
+                for(var x = 0; x < 17; x++)
+                {
+                 
+                
+                }
+                
+                for(var x = 0; x < 6; x++)
+                {
+                 
+                
+                }
+                
+                for(var x = 0; x < 8; x++)
+                {
+                 
+                
+                }
+                
+                
+                
             }
         });
-        alert(array[0][0][0]);
         dfd.resolve();
   }).promise();
 }
