@@ -1406,6 +1406,7 @@ SMART.ready(function(){
     $("#show_pt_summary_overlay[rel]").overlay(pts_opts);
     $("#show_explainer_overlay[rel]").overlay({top: '5%'});
     $("#show_timeline_overlay[rel]").overlay({top: '5%'});
+    $("#show_genomics_overlay[rel]").overlay({top: '5%'});
 
     // do data tables the labs overlay
     var labnames = [
