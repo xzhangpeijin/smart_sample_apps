@@ -689,6 +689,11 @@ var PROBLEMS_get = function(){
 
 var GENOMICS_get = function(){
   return $.Deferred(function(dfd){
+  
+        var patientData = [];
+        var patient_id = 8;
+  
+    
         // t1d, t2d, hyp, chd
         var array = new Array(4);
         array[0] = new Array(27);
@@ -746,10 +751,16 @@ var GENOMICS_get = function(){
                 
                 
             }
-        });
+           
+        }); 
+        
+        // do graphs
+        
+        
+        
         dfd.resolve();
   }).promise();
-}
+};
 
 // On SMART.ready, do all the data api calls and synchronize
 // when they are all complete.
