@@ -753,11 +753,7 @@ var GENOMICS_get = function(){
             }
            
         }); 
-        
-        // do graphs
-        
-        
-        
+           
         dfd.resolve();
   }).promise();
 };
@@ -775,6 +771,68 @@ SMART.ready(function(){
    , GENOMICS_get()
   )
   .then(function(){
+     
+     var gechart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'genomics_graph',
+                type: 'column'
+            },
+	    legend: {
+	    	enabled: false
+	    },
+	    exporting: {
+	    	enabled: false
+	    },
+	    credits: {
+	    	enabled: false
+	    },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                categories: ['DM1', 'DM2', 'HYP', 'CHD']
+            },
+            yAxis: {
+                labels: {
+                    enabled: false
+                },
+                title: {
+                    text: ''
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    return '<b>'+
+                        this.series.name + ' Risk: </b>'+ Math.round(this.y * this.point.stackTotal * 100) / 100 +'<br/>' + '<b>Total Risk: </b>' + Math.round(this.point.stackTotal * 100) / 100 + '';
+                },
+		style: {
+		    fontSize: '8pt'		
+		}
+            },
+            plotOptions: {
+		bar: {
+		    pointPadding: 0,
+		    groupPadding: 0.14
+		},
+                series: {
+                    stacking: 'normal',
+		    shadow: false
+                }
+            },
+                series: [{
+                name: 'Genomic',
+                data: [0.80, 1, 1.21, 1]
+            }, {
+                name: 'Clinical',
+                data: [0.2, 0.2, 0.4, 0.6]
+            }, {
+                name: 'Demographic',
+                data: [0.3, 0.4, 0.2, 0.2]
+            }]
+        });
+        
+     
+                
      
     // main demo info
     $('.family_name').text(pt.family_name)
@@ -1522,5 +1580,6 @@ SMART.ready(function(){
       }
       $('#a1c_ps').html(value_line_html);
     }
+   
   });
 });
