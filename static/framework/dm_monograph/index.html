@@ -30,59 +30,10 @@
       <script src='./js/underscore.min.js'></script>
       <script src='./js/json2.js'></script>
       <script src='./js/jquery.tools.overlay.js'></script>
-      <script src='./js/main.js'></script>
       <script src='./js/highcharts.js'></script>
-      <script src='./js/amcharts.js'></script>
-      <script type="text/javascript">
-            var chart;
-
-            var chartData = [{
-                country: "Czech Republic",
-                litres: 156.90
-            }, {
-                country: "Ireland",
-                litres: 131.10
-            }, {
-                country: "Germany",
-                litres: 115.80
-            }, {
-                country: "Australia",
-                litres: 109.90
-            }, {
-                country: "Austria",
-                litres: 108.30
-            }, {
-                country: "UK",
-                litres: 99.00
-            }];
-
-            AmCharts.ready(function () {
-                // RADAR CHART
-                chart = new AmCharts.AmRadarChart();
-                chart.dataProvider = chartData;
-                chart.categoryField = "country";
-                chart.startDuration = 2;
-
-                // VALUE AXIS
-                var valueAxis = new AmCharts.ValueAxis();
-                valueAxis.axisAlpha = 0.15;
-                valueAxis.minimum = 0;
-                valueAxis.dashLength = 3;
-                valueAxis.axisTitleOffset = 20;
-                valueAxis.gridCount = 5;
-                chart.addValueAxis(valueAxis);
-
-                // GRAPH
-                var graph = new AmCharts.AmGraph();
-                graph.valueField = "litres";
-                graph.bullet = "round";
-                graph.balloonText = "[[value]] litres of beer per year"
-                chart.addGraph(graph);
-
-                // WRITE
-                chart.write("radar");
-            });
-        </script>
+      <script src='./js/highcharts-more.js'></script>
+      <script src='./js/main.js'></script>
+   
   </head>
   <body>
    
@@ -135,7 +86,6 @@
           Genomics Advisor
 	</div>
 	
-	<div id='radar'></div>
 	
 	<div>
 		<div style='width: 60%; float: left; text-align: left;'> <b>Data format: </b> </div>

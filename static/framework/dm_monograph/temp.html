@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Highcharts Example</title>
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript">
+$(function () {
+    var chart;
+    $(document).ready(function() {
+        chart = new Highcharts.Chart({
+            chart: {
+        renderTo: 'container',
+        polar: true
+    },
+    
+    title: {
+        text: 'Highcharts Polar Chart'
+    },
+    
+    subtitle: {
+        text: 'Warning: This is a work in progress, you will find bugs'
+    },
+    
+    pane: {
+        center: ['50%', '50%'],
+        size: '90%',
+        startAngle: 0,
+        endAngle: 360
+    },
+
+    xAxis: {
+        tickInterval: 9.2,
+        min: 0,
+        max: 360,
+        labels: false
+    },
+        
+    yAxis: {
+        min: 0,
+        tickPixelInterval: 50,
+        gridLineInterpolation: 'polygon',
+        labels: false
+    },
+    
+    legend: {
+        align: 'right',
+        verticalAlign: 'top',
+        y: 100,
+        layout: 'vertical'
+    },
+        
+    plotOptions: {
+        series: {
+            pointStart: 0,
+            pointInterval: 8
+        },
+        column: {
+            pointRange: 0,
+            stacking: 'normal',
+            pointPadding: 0,
+            groupPadding: 0
+        }
+    },
+
+    series: [{
+        type: 'area',
+        data: [1, 8, 2, 7, 3, 6, 4, 5, 1, 8, 2, 7, 3, 6, 4, 5, 1, 8, 2, 7, 3, 6, 4, 5, 1, 8, 2, 7, 3, 6, 4, 5]
+    }]
+
+        });
+    });
+    
+});
+		</script>
+	</head>
+	<body>
+      <script src='./js/highcharts.js'></script>
+      <script src='./js/highcharts-more.js'></script>
+
+<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+
+	</body>
+</html>

@@ -810,9 +810,8 @@ SMART.ready(function(){
 		}
             },
             plotOptions: {
-		bar: {
-		    pointPadding: 0,
-		    groupPadding: 0.14
+		column: {
+		    animation: false,
 		},
                 series: {
                     stacking: 'normal',
@@ -827,12 +826,10 @@ SMART.ready(function(){
                 data: [0.2, 0.2, 0.4, 0.6]
             }, {
                 name: 'Demographic',
-                data: [0.3, 0.4, 0.2, 0.2]
+                data: [0, 0.4, 0.2, 0.2]
             }]
         });
-        
-     
-                
+         
      
     // main demo info
     $('.family_name').text(pt.family_name)
