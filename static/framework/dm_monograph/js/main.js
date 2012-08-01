@@ -693,6 +693,7 @@ var GENOMICS_get = function(){
         var patientData = [];
         var patient_id = 8;
   
+        
     
         // t1d, t2d, hyp, chd
         var array = new Array(4);
@@ -700,7 +701,9 @@ var GENOMICS_get = function(){
         array[1] = new Array(17);
         array[2] = new Array(6);
         array[3] = new Array(8);
-        
+        $.getJSON({
+            
+        });
         $.ajax({
             type: "GET",
             url: "SNPData.csv",
