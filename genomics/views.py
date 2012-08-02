@@ -5,11 +5,15 @@ import psycopg2
 import json
 
 
-def query(request, patient_id):
-        result = ""
-        con = psycopg2.connect(database='smart', user='smart', password='smart')
-	cur = con.cursor()
-	cur.execute("SELECT * FROM GENOMICS WHERE patient_id = " + patient_id)
-        for record in cur:
-               result += record;
-    return HttpResponse(result, mimetype='text/plain');
+def pquery(request, patient_id):
+    result = ""
+    con = psycopg2.connect(database='smart', user='smart', password='smart')
+    cur = con.cursor()
+    cur.execute("SELECT * FROM GENOMICS WHERE patient_id = " + patient_id)
+    return HttpResponse(json.dumps(build_dict(cur, cur.fetchone())), mimetype='application/json');
+    
+def build_dict(cursor, row):
+    x = {}
+    for key,col in enumerate(cursor.description):
+        x[col[0]] = row[key]
+    return x

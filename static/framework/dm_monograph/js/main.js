@@ -687,72 +687,158 @@ var PROBLEMS_get = function(){
   }).promise();
 };
 
+var genomics_risks = [1,1,1,1];
+var genomics_arr= new Array(4);
+    genomics_arr[0] = new Array();
+    genomics_arr[1] = new Array();
+    genomics_arr[2] = new Array();
+    genomics_arr[3] = new Array();
+var genomics_array = new Array(4);
+var hasGenomics = false;
+var revSNP = new Array(4);
+
 var GENOMICS_get = function(){
   return $.Deferred(function(dfd){
   
         var patientData = [];
-        var patient_id = 8;
-  
+        var snp_url = "psql/patient/" + (SMART.record.id % 252).toString();
+        $('#genomics_id').html(SMART.record.id % 252);
         
-    
         // t1d, t2d, hyp, chd
-        var array = new Array(4);
-        array[0] = new Array(27);
-        array[1] = new Array(17);
-        array[2] = new Array(6);
-        array[3] = new Array(8);
-        $.getJSON({
-            
-        });
+        genomics_array[0] = new Array(27);
+        genomics_array[1] = new Array(17);
+        genomics_array[2] = new Array(6);
+        genomics_array[3] = new Array(8);
+        
         $.ajax({
             type: "GET",
             url: "SNPData.csv",
             dataType: "text",
-            success: function(data) {
-                var allLines = data.split(/\r\n|\n/)
-                var count = 0;
-                var snpcount = 0;
-                for(var x = 2; x < allLines.length; x++)
-                {
-                    var temp = allLines[x].split(',');
-                    if(temp.length < 4)
+            success: function(csvdata) {
+                    var allLines = csvdata.split(/\r\n|\n/)
+                    var count = 0;
+                    var snpcount = 0;
+                    for(var x = 2; x < allLines.length; x++)
                     {
-                        count++;
-                        snpcount = 0;
+                        var temp = allLines[x].split(',');
+                        if(temp.length < 6)
+                        {
+                            count++;
+                            snpcount = 0;
+                        }
+                        else
+                        {
+                            genomics_array[count][snpcount] = temp;
+                            snpcount++;
+                        }
                     }
-                    else
+                    
+            $.ajax({
+                url: snp_url,
+                dataType: "json",
+                success: function(snpdata) {
+                    hasGenomics = true;
+                    var snp;
+                    var genotype;
+                    var maxrisk = 0;
+                    for(var x = 0; x < 27; x++)
                     {
-                        array[count][snpcount] = temp;
-                        snpcount++;
+                        snp = genomics_array[0][x][0];
+                        genotype = snpdata[snp];
+                        if(genotype == genomics_array[0][x][1])
+                        {
+                            if(genomics_array[0][x][2] > maxrisk)
+                            {
+                                revSNP[0] = snp;
+                                maxrisk = genomics_array[0][x][2];
+                            }
+                            genomics_risks[0] *= genomics_array[0][x][2]
+                            genomics_arr[0].push(new Array(genomics_array[0][x][0], genomics_array[0][x][4], genomics_array[0][x][5], genomics_array[0][x][1], genomics_array[0][x][2], genomics_array[0][x][3]))
+                        }
                     }
+                    maxrisk = 0;
+                    for(var x = 0; x < 17; x++)
+                    {
+                        snp = genomics_array[1][x][0];
+                        genotype = snpdata[snp];
+                        if(genotype == genomics_array[1][x][1])
+                        {
+                            if(genomics_array[1][x][2] > maxrisk)
+                            {
+                                revSNP[1] = snp;
+                                maxrisk = genomics_array[1][x][2];
+                            }
+                            genomics_risks[1] *= genomics_array[1][x][2]
+                            genomics_arr[1].push(new Array(genomics_array[1][x][0], genomics_array[1][x][4], genomics_array[1][x][5], genomics_array[1][x][1], genomics_array[1][x][2], genomics_array[1][x][3]))
+                        }
+                    }
+                    maxrisk = 0;
+                    for(var x = 0; x < 6; x++)
+                    {
+                        snp = genomics_array[2][x][0];
+                        genotype = snpdata[snp];
+                        if(genotype == genomics_array[2][x][1])
+                        {
+                            if(genomics_array[2][x][2] > maxrisk)
+                            {
+                                revSNP[2] = snp;
+                                maxrisk = genomics_array[2][x][2];
+                            }
+                            genomics_risks[2] *= genomics_array[2][x][2]
+                            genomics_arr[2].push(new Array(genomics_array[2][x][0], genomics_array[2][x][4], genomics_array[2][x][5], genomics_array[2][x][1], genomics_array[2][x][2], genomics_array[2][x][3]))
+                        }
+                    }
+                    maxrisk = 0;
+                    for(var x = 0; x < 8; x++)
+                    {
+                        snp = genomics_array[3][x][0];
+                        genotype = snpdata[snp];
+                        if(genotype == genomics_array[3][x][1])
+                        {
+                            if(genomics_array[3][x][2] > maxrisk)
+                            {
+                                revSNP[3] = snp;
+                                maxrisk = genomics_array[3][x][2];
+                            }
+                            genomics_risks[3] *= genomics_array[3][x][2]
+                            genomics_arr[3].push(new Array(genomics_array[3][x][0], genomics_array[3][x][4], genomics_array[3][x][5], genomics_array[3][x][1], genomics_array[3][x][2], genomics_array[3][x][3]))
+                        }
+                    }
+                    $('#genomics_format').html(snpdata['filetype']);
+                    var advicetext = new Array(4);
+                    // set advice
+                    
+                    for(var x = 0; x < 4; x++)
+                    {
+                        genomics_risks[x] = (Math.round(genomics_risks[x] * 100) / 100);
+                        advicetext[x] = "<font color='";
+                        
+                        if(genomics_risks[x] <= 0.80)
+                            advicetext[x] += "green'";
+                        else if(genomics_risks[x] >= 1.50 && genomics_risks[x] < 2.00)
+                            advicetext[x] += "orange'";
+                        else if(genomics_risks[x] >= 2.00)
+                            advicetext[x] += "red'";
+                        else    
+                            advicetext[x] += "black'";
+                        
+                        advicetext[x] += ">" + genomics_risks[x].toString() + "</font>";
+                    }
+                    
+                    $('#DM1Risk').html(advicetext[0]); 
+                    $('#DM2Risk').html(advicetext[1]); 
+                    $('#HYPRisk').html(advicetext[2]); 
+                    $('#CHDRisk').html(advicetext[3]); 
+                },
+                error: function() {
+                    $('#genomics_format').html("No Data");
+                    $('#DM1Risk').html("No Genomics Data Available"); 
+                    $('#DM2Risk').html("No Genomics Data Available"); 
+                    $('#HYPRisk').html("No Genomics Data Available"); 
+                    $('#CHDRisk').html("No Genomics Data Available"); 
+                    
                 }
-                
-                for(var x = 0; x < 27; x++)
-                {
-                 
-                
-                }
-                
-                for(var x = 0; x < 17; x++)
-                {
-                 
-                
-                }
-                
-                for(var x = 0; x < 6; x++)
-                {
-                 
-                
-                }
-                
-                for(var x = 0; x < 8; x++)
-                {
-                 
-                
-                }
-                
-                
-                
+            });
             }
            
         }); 
@@ -774,7 +860,8 @@ SMART.ready(function(){
    , GENOMICS_get()
   )
   .then(function(){
-     
+        if(hasGenomics)
+        {
      var gechart = new Highcharts.Chart({
             chart: {
                 renderTo: 'genomics_graph',
@@ -783,6 +870,9 @@ SMART.ready(function(){
 	    legend: {
 	    	enabled: false
 	    },
+	    colors: [
+	        '#AA4643','#89A54E','#4572A7',
+        ],
 	    exporting: {
 	    	enabled: false
 	    },
@@ -804,9 +894,17 @@ SMART.ready(function(){
                 }
             },
             tooltip: {
+                bordercolor: '#4572A7',
                 formatter: function() {
-                    return '<b>'+
-                        this.series.name + ' Risk: </b>'+ Math.round(this.y * this.point.stackTotal * 100) / 100 +'<br/>' + '<b>Total Risk: </b>' + Math.round(this.point.stackTotal * 100) / 100 + '';
+                    var index = 0;
+                    var disease;
+                    switch(this.x){
+                        case 'DM1': index = 0; disease = '<b>Diabetes Type 1 </b><br>'; break; 
+                        case 'DM2': index = 1; disease = '<b>Diabetes Type 2 </b><br>'; break; 
+                        case 'HYP': index = 2; disease = '<b>Hypertension </b><br>'; break; 
+                        case 'CHD': index = 3; disease = '<b>Coronary Heart Disease </b><br>'; break; 
+                    }
+                    return disease + 'Relative Risk: ' + genomics_risks[index] +'<br/>' + 'Highest Risk SNP: ' + revSNP[index];
                 },
 		style: {
 		    fontSize: '8pt'		
@@ -818,21 +916,57 @@ SMART.ready(function(){
 		},
                 series: {
                     stacking: 'normal',
-		    shadow: false
+		            shadow: false
                 }
             },
                 series: [{
-                name: 'Genomic',
-                data: [0.80, 1, 1.21, 1]
-            }, {
-                name: 'Clinical',
-                data: [0.2, 0.2, 0.4, 0.6]
-            }, {
-                name: 'Demographic',
-                data: [0, 0.4, 0.2, 0.2]
+                name: 'Above',
+                data: [0.1, 0.6, 0, 0.7]
+            },{
+                name: 'Below',
+                data: [0, 0, 0.15, 0]
+            },{
+                name: 'Normal',
+                data: [1, 1, 0.85, 1]
             }]
         });
+        }
+        else
+            $('#genomics_graph').html("<img src='./assets/Empty.png' />");
          
+       var SNPs = ["","","",""];
+       
+       for(var x = 0; x < 4; x++)
+       {
+            for(var y = 0; y < genomics_arr[x].length; y++)
+            {
+                if(y % 2 == 0)
+                    SNPs[x] += "<div> <div style='width: 26%; float: left; text align: left; margin-left: 2px'>";
+                else
+                    SNPs[x] += "<div class='gray'> <div style='width: 26%; float: left; text align: left; margin-left: 2px'>";
+                SNPs[x] += genomics_arr[x][y][0];
+                SNPs[x] += "</div> <div style='width: 20%; float: left; text align: left; margin-left: -2px'>";
+                SNPs[x] += genomics_arr[x][y][1];
+                SNPs[x] += "</div> <div style='width: 13%; float: left; text align: left;'>"
+                SNPs[x] += genomics_arr[x][y][2];
+                SNPs[x] += "</div> <div style='width: 11%; float: left; text align: left;'>"
+                SNPs[x] += genomics_arr[x][y][3];
+                SNPs[x] += "</div> <div style='width: 13%; float: left; text align: left;'>"
+                SNPs[x] += genomics_arr[x][y][4];
+                SNPs[x] += "</div> <div style='width: 15%; float: right; text-align: right; margin-right: 5px'>"
+                SNPs[x] += genomics_arr[x][y][5];
+                SNPs[x] += "</div> <div class='clear'></div></div>";
+            }
+            SNPs[x] += "<div style='float: right; text-align: right; margin-right: 10px;'><b> Total Relative Risk: " + genomics_risks[x] + " </b></div>"
+       }
+       
+       if(!hasGenomics)
+        SNPS = ["No genomic data Available", "No genomic data Available", "No genomic data Available", "No genomic data Available"];
+       
+       $('#DM1Span').html(SNPs[0]);
+       $('#DM2Span').html(SNPs[1]);
+       $('#HYPSpan').html(SNPs[2]);
+       $('#CHDSpan').html(SNPs[3]);
      
     // main demo info
     $('.family_name').text(pt.family_name)
