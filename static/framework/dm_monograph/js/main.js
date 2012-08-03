@@ -829,40 +829,17 @@ var GENOMICS_get = function(){
                     $('#DM2Risk').html(advicetext[1]); 
                     $('#HYPRisk').html(advicetext[2]); 
                     $('#CHDRisk').html(advicetext[3]); 
-                },
-                error: function() {
-                    $('#genomics_format').html("No Data");
-                    $('#DM1Risk').html("No Genomics Data Available"); 
-                    $('#DM2Risk').html("No Genomics Data Available"); 
-                    $('#HYPRisk').html("No Genomics Data Available"); 
-                    $('#CHDRisk').html("No Genomics Data Available"); 
                     
-                }
-            });
-            }
-           
-        }); 
-           
-        dfd.resolve();
-  }).promise();
-};
-
-// On SMART.ready, do all the data api calls and synchronize
-// when they are all complete.
-SMART.ready(function(){
-  $.when(
-     ALLERGIES_get()
-   , DEMOGRAPHICS_get()
-   , VITAL_SIGNS_get()
-   , LAB_RESULTS_get()
-   , PROBLEMS_get()
-   , MEDICATIONS_get()
-   , GENOMICS_get()
-  )
-  .then(function(){
-        if(hasGenomics)
+                    var graphdata = new Array(4);
+        for(var x = 0; x < 4; x++)
         {
-     var gechart = new Highcharts.Chart({
+            if(genomics_risks[x] > 1)
+                graphdata[x] = [genomics_risks[x] - 1, 0, 1];
+            else        
+                graphdata[x] = [0, 1 - genomics_risks[x], genomics_risks[x]];
+        }
+        
+        var gechart = new Highcharts.Chart({
             chart: {
                 renderTo: 'genomics_graph',
                 type: 'column'
@@ -921,18 +898,89 @@ SMART.ready(function(){
             },
                 series: [{
                 name: 'Above',
-                data: [0.1, 0.6, 0, 0.7]
+                data: [graphdata[0][0], graphdata[1][0], graphdata[2][0], graphdata[3][0]]
             },{
                 name: 'Below',
-                data: [0, 0, 0.15, 0]
+                data: [graphdata[0][1], graphdata[1][1], graphdata[2][1], graphdata[3][1]]
             },{
                 name: 'Normal',
-                data: [1, 1, 0.85, 1]
+                data: [graphdata[0][2], graphdata[1][2], graphdata[2][2], graphdata[3][2]]
             }]
         });
+        
+        var radardata = new Array(genomics_arr[1].length);
+        for(var x = 0; x < radardata.length; x++)
+                radardata[x] = parseFloat(genomics_arr[1][x][4]);
+        var radarchart = new Highcharts.Chart({
+            
+    chart: {
+        renderTo: 'radar_graph',
+        polar: 1
+    },
+    
+    title: {
+        text: 'Type 2 Diabetes Radar Graph'
+    },
+    
+    pane: {
+        //size: '98%',
+        startAngle: 0,
+        endAngle: 360
+    },
+
+    xAxis: {
+        tickInterval: 360/genomics_arr[1].length,
+        min: 0,
+        max: Math.round(360/genomics_arr[1].length) * genomics_arr[1].length,
+        labels: { enabled: false },
+    },
+        
+    yAxis: {
+        min: 0.5,
+        max: 1.5,
+        tickInterval: 0.5,
+        labels: { enabled: false }
+    },
+    
+    legend: {
+        enabled: false
+    },
+    
+    exporting: {
+	    	enabled: false
+	    },
+	    credits: {
+	    	enabled: false
+	    },
+	    
+	    tooltip: {
+                bordercolor: '#4572A7',
+                formatter: function() {
+                    return "<b>SNP: </b>" + genomics_arr[1][Math.round(this.x * genomics_arr[1].length / 360)][0] + "<br><b>Relative Risk: </b>" + genomics_arr[1][Math.round(this.x * genomics_arr[1].length / 360)][4];
+                },
+		style: {
+		    fontSize: '8pt'		
+		}
+            },
+        
+    plotOptions: {
+        series: {
+            pointStart: 0,
+            pointInterval: 360/genomics_arr[1].length
+        },
+        column: {
+            pointRange: 0,
+            stacking: 'normal',
+            pointPadding: 0,
+            groupPadding: 0
         }
-        else
-            $('#genomics_graph').html("<img src='./assets/Empty.png' />");
+    },
+
+    series: [{
+        type: 'area',
+        data: radardata
+    }]
+    });   
          
        var SNPs = ["","","",""];
        
@@ -960,13 +1008,48 @@ SMART.ready(function(){
             SNPs[x] += "<div style='float: right; text-align: right; margin-right: 10px;'><b> Total Relative Risk: " + genomics_risks[x] + " </b></div>"
        }
        
-       if(!hasGenomics)
-        SNPS = ["No genomic data Available", "No genomic data Available", "No genomic data Available", "No genomic data Available"];
+       if(!hasGenomics){
+           SNPs = ["No genomic data Available", "No genomic data Available", "No genomic data Available", "No genomic data Available"];
+           $('#genomics_graph').html("<img src='./assets/Empty.png' />");
+       }
        
        $('#DM1Span').html(SNPs[0]);
        $('#DM2Span').html(SNPs[1]);
        $('#HYPSpan').html(SNPs[2]);
        $('#CHDSpan').html(SNPs[3]);
+                },
+                error: function() {
+                    $('#genomics_format').html("No Data");
+                    $('#DM1Risk').html("No Genomics Data Available"); 
+                    $('#DM2Risk').html("No Genomics Data Available"); 
+                    $('#HYPRisk').html("No Genomics Data Available"); 
+                    $('#CHDRisk').html("No Genomics Data Available"); 
+                    
+                }
+            });
+            }
+           
+        }); 
+           
+        dfd.resolve();
+  }).promise();
+};
+
+// On SMART.ready, do all the data api calls and synchronize
+// when they are all complete.
+SMART.ready(function(){
+  $.when(
+     ALLERGIES_get()
+   , DEMOGRAPHICS_get()
+   , VITAL_SIGNS_get()
+   , LAB_RESULTS_get()
+   , PROBLEMS_get()
+   , MEDICATIONS_get()
+  )
+  .then(function(){ 
+  
+        GENOMICS_get();
+        
      
     // main demo info
     $('.family_name').text(pt.family_name)
