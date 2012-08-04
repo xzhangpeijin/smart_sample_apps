@@ -1,0 +1,22 @@
+{
+  "name": "Genomics Advisor",
+  "description": "Loads patient SNP data from remote server and displays clinically relevant information",
+  "author": "Peijin Zhang <xzhangpeijin@gmail.com>",
+  "id": "genomics_advisor@apps.smartplatforms.org",
+  "version": ".1a",
+  "optimalBrowserEnvironments": ["desktop"],
+  "supportedBrowserEnvironments": ["desktop", "tablet"],
+
+  "mode": "ui",
+  "scope": "record",
+
+  "index": "http://localhost:8001/framework/genomics_advisor/index.html",
+  "icon": "http://localhost:8001/framework/genomics_advisor/assets/icon.png",
+
+  "smart_version": "0.4",
+  "requires": {
+    "http://smartplatforms.org/terms#Demographics": {
+        "methods": ["GET"]
+    }
+  }
+}

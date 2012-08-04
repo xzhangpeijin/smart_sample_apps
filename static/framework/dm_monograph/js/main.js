@@ -908,22 +908,24 @@ var GENOMICS_get = function(){
             }]
         });
         
-        var radardata = new Array(genomics_arr[1].length);
-        for(var x = 0; x < radardata.length; x++)
-                radardata[x] = parseFloat(genomics_arr[1][x][4]);
-        var radarchart = new Highcharts.Chart({
+        var radardata1 = new Array(genomics_arr[1].length);
+        for(var x = 0; x < radardata1.length; x++)
+                radardata1[x] = parseFloat(genomics_arr[1][x][4]);
+        var radarchart1 = new Highcharts.Chart({
             
     chart: {
-        renderTo: 'radar_graph',
+        renderTo: 'radar_graph1',
         polar: 1
     },
     
     title: {
-        text: 'Type 2 Diabetes Radar Graph'
+        text: 'Diabetes Mellitus Type 2',
+	margin: 0,
+	y: 5
     },
     
     pane: {
-        //size: '98%',
+        size: '98%',
         startAngle: 0,
         endAngle: 360
     },
@@ -978,7 +980,240 @@ var GENOMICS_get = function(){
 
     series: [{
         type: 'area',
-        data: radardata
+        data: radardata1
+    }]
+    });
+
+var radardata2 = new Array(genomics_arr[0].length);
+        for(var x = 0; x < radardata2.length; x++)
+                radardata2[x] = parseFloat(genomics_arr[0][x][4]);
+        var radarchart2 = new Highcharts.Chart({
+            
+    chart: {
+        renderTo: 'radar_graph2',
+        polar: 1
+    },
+colors: [
+	'#AA4643',
+],
+    
+    title: {
+        text: ''
+	
+    },
+    
+    pane: {
+        size: '98%',
+        startAngle: 0,
+        endAngle: 360
+    },
+
+    xAxis: {
+        tickInterval: 360/genomics_arr[0].length,
+        min: 0,
+        max: Math.round(360/genomics_arr[0].length) * genomics_arr[0].length,
+        labels: { enabled: false },
+    },
+        
+    yAxis: {
+        min: 0.5,
+        max: 1.5,
+        tickInterval: 0.5,
+        labels: { enabled: false }
+    },
+    
+    legend: {
+        enabled: false
+    },
+    
+    exporting: {
+	    	enabled: false
+	    },
+	    credits: {
+	    	enabled: false
+	    },
+	    
+	    tooltip: {
+                bordercolor: '#4572A7',
+                formatter: function() {
+                    return "<b>Type 1 Diabetes</b>" + "<br><b>SNP: </b>" + genomics_arr[0][Math.round(this.x * genomics_arr[0].length / 360)][0] + "<br><b>Relative Risk: </b>" + genomics_arr[0][Math.round(this.x * genomics_arr[0].length / 360)][4];
+                },
+		style: {
+		    fontSize: '8pt'		
+		}
+            },
+        
+    plotOptions: {
+        series: {
+            pointStart: 0,
+            pointInterval: 360/genomics_arr[0].length
+        },
+        column: {
+            pointRange: 0,
+            stacking: 'normal',
+            pointPadding: 0,
+            groupPadding: 0
+        }
+    },
+
+    series: [{
+        type: 'area',
+        data: radardata2
+    }]
+    });
+
+var radardata3 = new Array(genomics_arr[2].length);
+        for(var x = 0; x < radardata3.length; x++)
+                radardata3[x] = parseFloat(genomics_arr[2][x][4]);
+        var radarchart3 = new Highcharts.Chart({
+            
+    chart: {
+        renderTo: 'radar_graph3',
+        polar: 1
+    },
+colors: [
+	'#89A54E', 
+],
+    
+    title: {
+        text: ''
+    },
+    
+    pane: {
+        size: '98%',
+        startAngle: 0,
+        endAngle: 360
+    },
+
+    xAxis: {
+        tickInterval: 360/genomics_arr[2].length,
+        min: 0,
+        max: Math.round(360/genomics_arr[2].length) * genomics_arr[2].length,
+        labels: { enabled: false },
+    },
+        
+    yAxis: {
+        min: 0.5,
+        max: 1.5,
+        tickInterval: 0.5,
+        labels: { enabled: false }
+    },
+    
+    legend: {
+        enabled: false
+    },
+    
+    exporting: {
+	    	enabled: false
+	    },
+	    credits: {
+	    	enabled: false
+	    },
+	    
+	    tooltip: {
+                bordercolor: '#4572A7',
+                formatter: function() {
+                    return "<b>Hypertension</b>" + "<br><b>SNP: </b>" + genomics_arr[1][Math.round(this.x * genomics_arr[2].length / 360)][0] + "<br><b>Relative Risk: </b>" + genomics_arr[2][Math.round(this.x * genomics_arr[2].length / 360)][4];
+                },
+		style: {
+		    fontSize: '8pt'		
+		}
+            },
+        
+    plotOptions: {
+        series: {
+            pointStart: 0,
+            pointInterval: 360/genomics_arr[2].length
+        },
+        column: {
+            pointRange: 0,
+            stacking: 'normal',
+            pointPadding: 0,
+            groupPadding: 0
+        }
+    },
+
+    series: [{
+        type: 'area',
+        data: radardata3
+    }]
+    });
+
+var radardata4 = new Array(genomics_arr[3].length);
+        for(var x = 0; x < radardata4.length; x++)
+                radardata4[x] = parseFloat(genomics_arr[3][x][4]);
+        var radarchart4 = new Highcharts.Chart({
+            
+    chart: {
+        renderTo: 'radar_graph4',
+        polar: 1
+    },
+
+colors: [
+	'#80699B', 
+],
+    
+    title: {
+        text: ''
+    },
+    
+    pane: {
+        size: '98%',
+        startAngle: 0,
+        endAngle: 360
+    },
+
+    xAxis: {
+        tickInterval: 360/genomics_arr[3].length,
+        min: 0,
+        max: Math.round(360/genomics_arr[3].length) * genomics_arr[3].length,
+        labels: { enabled: false },
+    },
+        
+    yAxis: {
+        min: 0.5,
+        max: 1.5,
+        tickInterval: 0.5,
+        labels: { enabled: false }
+    },
+    
+    legend: {
+        enabled: false
+    },
+    
+    exporting: {
+	    	enabled: false
+	    },
+	    credits: {
+	    	enabled: false
+	    },
+	    
+	    tooltip: {
+                bordercolor: '#4572A7',
+                formatter: function() {
+                    return "<b>Coronary Heart Disease</b>" + "<br><b>SNP: </b>" + genomics_arr[3][Math.round(this.x * genomics_arr[3].length / 360)][0] + "<br><b>Relative Risk: </b>" + genomics_arr[3][Math.round(this.x * genomics_arr[3].length / 360)][4];
+                },
+		style: {
+		    fontSize: '8pt'		
+		}
+            },
+        
+    plotOptions: {
+        series: {
+            pointStart: 0,
+            pointInterval: 360/genomics_arr[3].length
+        },
+        column: {
+            pointRange: 0,
+            stacking: 'normal',
+            pointPadding: 0,
+            groupPadding: 0
+        }
+    },
+
+    series: [{
+        type: 'area',
+        data: radardata4
     }]
     });   
          
@@ -1007,11 +1242,7 @@ var GENOMICS_get = function(){
             }
             SNPs[x] += "<div style='float: right; text-align: right; margin-right: 10px;'><b> Total Relative Risk: " + genomics_risks[x] + " </b></div>"
        }
-       
-       if(!hasGenomics){
-           SNPs = ["No genomic data Available", "No genomic data Available", "No genomic data Available", "No genomic data Available"];
-           $('#genomics_graph').html("<img src='./assets/Empty.png' />");
-       }
+
        
        $('#DM1Span').html(SNPs[0]);
        $('#DM2Span').html(SNPs[1]);
@@ -1019,12 +1250,17 @@ var GENOMICS_get = function(){
        $('#CHDSpan').html(SNPs[3]);
                 },
                 error: function() {
+			$('#DM1Span').html("No genomic Data Available");
+       $('#DM2Span').html("No genomic Data Available");
+       $('#HYPSpan').html("No genomic Data Available");
+       $('#CHDSpan').html("No genomic Data Available");
                     $('#genomics_format').html("No Data");
                     $('#DM1Risk').html("No Genomics Data Available"); 
                     $('#DM2Risk').html("No Genomics Data Available"); 
                     $('#HYPRisk').html("No Genomics Data Available"); 
                     $('#CHDRisk').html("No Genomics Data Available"); 
-                    
+                    $('#genomics_graph').html("<img src='./assets/Empty.png' />");
+		    $('#show_genomics_overlay').html("");
                 }
             });
             }

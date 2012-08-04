@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <!--
+    SMART Diabetes Monograph
+    ========================
+
+    From the SMART Project <http://www.smartplatforms.org/>
+    Arjun Sanyal <arjun.sanyal@childrens.harvard.edu> - Design and Implementation
+    Rachel Eastwood - Explainer page
+
+    Notes:
+    - Designed for a 1280x1024 window size
+
+    TODO:
+    - fill in requires in manifest file
+  -->
+  <head>
+    <title>SMART Diabetes Monograph</title>
+      <link rel='stylesheet' href='./assets/fluid_grid_60_12_0.css'>
+      <link rel='stylesheet' href='./assets/main.css'>
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+      <script src='../smart/scripts/smart-api-client.js'></script>
+      <!-- note: we take the SMART jQuery object and make it global -->
+      <script> $ = jQuery = SMART.$; </script>
+      <script src='./js/xdate.js'></script>
+      <script src='./js/jsonld.js'></script>
+      <script src='./js/flot/jquery.flot.min.js'></script>
+      <script src='./js/flot/jquery.flot.resize.min.js'></script>
+      <!--[if lte IE 8]><script src="./js/flot/excanvas.min.js"></script><![endif]-->
+      <script src='./js/underscore.min.js'></script>
+      <script src='./js/json2.js'></script>
+      <script src='./js/jquery.tools.overlay.js'></script>
+      <script src='./js/highcharts.js'></script>
+      <script src='./js/highcharts-more.js'></script>
+      <script src='./js/main.js'></script>
+   
+  </head>
+  <body>
+   
+    <div id='app_title_line'>
+      <img class='smart_bug' src='./assets/smart_bug.png' />
+      SMART Genomics Advisor
+    </div>
+
+    <div id='content' class="container_12">
+
+      <div class='demo_line'>
+        <div style='width: 48%; float: left; margin-bottom: 10px;' class='name'>
+          <span class='family_name'></span>, <span class='given_name'></span>
+        </div>
+        <div class='diabetic_diagnosis_p' style='width: 48%; float: left; text-align: right; margin-bottom: 10px;'>
+          &nbsp;
+          <!-- <span class='demo_line_label' style='display: none;' class='diabetic_info_label'>DIAGNOSIS</span> -->
+          <span class='diabetic_info highlight'></span>
+          <span class='diabetic_how_long_text highlight'></span>
+        </div>
+      </div>
+
+      <div class='demo_line' style='font-weight: normal !important; font-size: 14px;'>
+        <div style='width: 38%; float: left'>
+          <span class='demo_line_label'>DOB</span> <span class='birthday'></span>&nbsp;&nbsp;
+          <span class='demo_line_label'>AGE</span> <span class='age'></span>&nbsp;&nbsp;
+          <span class='demo_line_label'>SEX</span> <span class='gender'></span>&nbsp;&nbsp;
+        </div>
+      </div>
+
+      <div class='clear'></div>
+
+<div style='width: 49%; float: left'>
+
+	<div class='section_header'>Genomics Advisor</div>
+
+	<div>
+		<div style='width: 60%; float: left; text-align: left;'> <b>Patient ID:</b> </div>
+		<div id='genomics_id' style='width: 35%; float: left; text-align: right;'></div>
+	</div>
+	<div class='gray'>
+                <div style='width: 60%; float: left; text-align: left;'> <b>Data format: </b> </div>
+		<div id='genomics_format' style='width: 35%; float: left; text-align: right;'></div>
+	
+	</div>
+	
+	<div class='clear' style='margin-top: 20px'></div>
+
+            <div class='section_header'>
+	    SNP
+	    <div style='width: 17%; float: right; text-align: right; margin-right: 5px'>Frequency</div>
+	    <div style='width: 13%; float: right; text align: left;'> Risk </div>
+	    <div style='width: 11%; float: right; text align: left;'> Code </div>
+	    <div style='width: 13%; float: right; text align: left;'> CHRM </div>
+	    <div style='width: 20%; float: right; text align: left; margin-left: 1px'> Locus </div>
+            </div>
+	  
+	  <div class='section_subheader'> Type 1 Diabetes  </div>
+	  <div id='DM1Span'></div>
+	  
+          <div class='section_subheader' style='margin-top: 20px'> Type 2 Diabetes  </div>
+          <div id='DM2Span'></div>
+          
+          <div class='section_subheader' style='margin-top: 20px'> Hypertension  </div>
+          <div id='HYPSpan'></div>
+          
+          <div class='section_subheader' style='margin-top: 20px'> Coronary Heart Disease  </div>
+          <div id='CHDSpan'></div>
+         	<div class='section_header'> Genomics Advice </div>
+                <div class='section_subheader'> Disease Info </div>
+                        <div id='overlay_disease'>No Information Available</div>
+                <div class='section_subheader'> Drug Info </div>
+                        <div id='overlay_drug'>No Information Available</div>
+        </div>
+
+
+	<div id='genomics_graph' style='width: 49%; height: 400px; margin: 0 auto'>
+        <div id="radar_graph1" style="width: 24%; height:300px; margin-right: 250px"></div>
+	
+            </div>
+                        
+      	</div>
+
+      </div>
+    </div>
+  </body>
+</html>
