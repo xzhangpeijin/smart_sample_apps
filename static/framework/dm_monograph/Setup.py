@@ -4,6 +4,7 @@ import psycopg2
 import sys
 import urllib2
 import simplejson
+import csv
 
 con = None
 snps = ['rs1465788', 'rs4900384', 'rs7202877', 'rs757411', 'rs425105', 'rs5753037', 'rs1051708', 'rs7804356', 'rs1769673', 'rs9388489', 'rs4763879', 'rs3087243', 'rs3825932', 'rs2292239', 'rs2664170', 'rs3129934', 'rs1990760', 'rs3024505', 'rs6822844', 'rs4788084', 'rs2104286', 'rs3741208', 'rs725613', 'rs2290400', 'rs6679677', 'rs2542151', 'rs3184504', 'rs3746722', 'rs3788013', 'rs2877716', 'rs243021', 'rs7756992', 'rs2383208', 'rs1552224', 'rs1024405', 'rs780094', 'rs4607517', 'rs1111875', 'rs2612067', 'rs4402960', 'rs2943641', 'rs864745', 'rs5215', 'rs2237892', 'rs972283', 'rs1083096', 'rs2793831', 'rs1801282', 'rs8042680', 'rs340874', 'rs1326663', 'rs4430796', 'rs7903146', 'rs7578597', 'rs1325593', 'rs7961581', 'rs1001013', 'rs4457053', 'rs1163439', 'rs12413409', 'rs1378942', 'rs17367504', 'rs751891', 'rs4293393', 'rs1107280', 'rs1075727', 'rs599839', 'rs4773144', 'rs1746048', 'rs1243607', 'rs1412444', 'rs2291834', 'rs9818870', 'rs974819', 'rs7739181', 'rs1293658', 'rs9982601', 'rs6725887', 'rs1155692']
@@ -36,6 +37,17 @@ try:
 	for x in xrange(len(data)):
 	        data[x] += ')'
 	        cur.execute("INSERT INTO genomics VALUES " + data[x])
+	        
+	cur.execute("CREATE TABLE drug_advice(SNP VARCHAR(20) PRIMARY KEY, Genotype VARCHAR(2), Drug VARCHAR(20), Advice TEXT)");
+	
+	reader = csv.reader(open('DrugInfo.csv', 'rb'));
+	
+	for row in reader:
+	        if(row[0] != "SNP"):
+	                drugdata = "('" + row[0] + "', '" + row[1] + "', '" + row[2] + "', '" + row[3] + "')";        	        
+	                cur.execute("INSERT INTO drug_advice VALUES " + drugdata);
+	        
+	        
 	con.commit()
 	
 

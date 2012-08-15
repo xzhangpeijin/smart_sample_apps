@@ -1,6 +1,7 @@
 # Create your views here.
 
 from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
 import psycopg2
 import json
 
@@ -17,3 +18,13 @@ def build_dict(cursor, row):
     for key,col in enumerate(cursor.description):
         x[col[0]] = row[key]
     return x
+    
+def getdrug(request):
+    med_data = request.GET;
+    
+    if(med_data is None):
+        return HttpResponseBadRequest();
+    
+   
+    
+    return HttpResponse(med_data, mimetype='text');

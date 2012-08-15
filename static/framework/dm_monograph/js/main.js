@@ -737,6 +737,8 @@ var GENOMICS_get = function(){
                 url: snp_url,
                 dataType: "json",
                 success: function(snpdata) {
+                        
+                    $('#genomics_overlay').html("<a rel='#genomics' id='show_genomics_overlay' /> &middot; Genomics Advisor </a>")
                     hasGenomics = true;
                     var snp;
                     var genotype;
@@ -1242,6 +1244,22 @@ colors: [
             }
             SNPs[x] += "<div style='float: right; text-align: right; margin-right: 10px;'><b> Total Relative Risk: " + genomics_risks[x] + " </b></div>"
        }
+       
+       $.ajax({
+                url: "psql/drugs/",
+                dataType: "text",
+                data: pt.meds_arr[0],
+                success: function(drugdata){
+                        alert(drugdata);
+                        alert("asdF");
+                },
+                error: function() {
+
+                }
+                
+       });
+                
+              
 
        
        $('#DM1Span').html(SNPs[0]);
@@ -1261,6 +1279,7 @@ colors: [
                     $('#CHDRisk').html("No Genomics Data Available"); 
                     $('#genomics_graph').html("<img src='./assets/Empty.png' />");
 		    $('#show_genomics_overlay').html("");
+		    $('#genomics_drug').html("No Information Available");
                 }
             });
             }
@@ -1284,7 +1303,7 @@ SMART.ready(function(){
   )
   .then(function(){ 
   
-        GENOMICS_get();
+    GENOMICS_get();
         
      
     // main demo info
