@@ -1245,16 +1245,25 @@ colors: [
             SNPs[x] += "<div style='float: right; text-align: right; margin-right: 10px;'><b> Total Relative Risk: " + genomics_risks[x] + " </b></div>"
        }
        
+       var MedList = { 
+            Meds: [] 
+       };
+       
+       for(var x = 0; x < pt.meds_arr.length; x++)
+       {
+           var Med = String(pt.meds_arr[x]);
+           MedList.Meds.push({"Med": Med.substring(Med.indexOf(",") + 1, Med.indexOf(" "))});
+       }
+       
        $.ajax({
                 url: "psql/drugs/",
                 dataType: "text",
-                data: pt.meds_arr[0],
+                data: MedList,
                 success: function(drugdata){
                         alert(drugdata);
-                        alert("asdF");
                 },
-                error: function() {
-
+                error: function(err1, err2) {
+                    alert(err1 + err2);
                 }
                 
        });
