@@ -38,7 +38,7 @@ try:
 	        data[x] += ')'
 	        cur.execute("INSERT INTO genomics VALUES " + data[x])
 	        
-	cur.execute("CREATE TABLE drug_advice(SNP VARCHAR(20) PRIMARY KEY, Genotype VARCHAR(2), Drug VARCHAR(20), Advice TEXT)");
+	cur.execute("CREATE TABLE drug_advice(SNP TEXT, Genotype VARCHAR(2), Drug TEXT, Advice TEXT)");
 	
 	reader = csv.reader(open('DrugInfo.csv', 'rb'));
 	

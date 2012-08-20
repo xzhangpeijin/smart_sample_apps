@@ -815,9 +815,9 @@ var GENOMICS_get = function(){
                         genomics_risks[x] = (Math.round(genomics_risks[x] * 100) / 100);
                         advicetext[x] = "<font color='";
                         
-                        if(genomics_risks[x] <= 0.80)
+                        if(genomics_risks[x] <= 0.75)
                             advicetext[x] += "green'";
-                        else if(genomics_risks[x] >= 1.50 && genomics_risks[x] < 2.00)
+                        else if(genomics_risks[x] >= 1.25 && genomics_risks[x] < 2.00)
                             advicetext[x] += "orange'";
                         else if(genomics_risks[x] >= 2.00)
                             advicetext[x] += "red'";
@@ -1242,9 +1242,41 @@ colors: [
                 SNPs[x] += genomics_arr[x][y][5];
                 SNPs[x] += "</div> <div class='clear'></div></div>";
             }
-            SNPs[x] += "<div style='float: right; text-align: right; margin-right: 10px;'><b> Total Relative Risk: " + genomics_risks[x] + " </b></div>"
+            SNPs[x] += "<div style='float: right; text-align: right; margin-right: 10px;'><b> Total Relative Risk: ";
+            if(genomics_risks[x] <= 0.75)
+                SNPs[x] += "<font color='green'>" + genomics_risks[x] + " </b></div>"
+            else if(genomics_risks[x] <= 1.25)
+                SNPs[x] += "<font color='black'>" + genomics_risks[x] + " </b></div>"
+            else if(genomics_risks[x] <= 2.00)
+                SNPs[x] += "<font color='orange'>" + genomics_risks[x] + " </b></div>"
+            else
+                SNPs[x] += "<font color='red'>" + genomics_risks[x] + " </b></div>";
        }
        
+       highrisk = false;
+       
+       if(genomics_risks[0] >= 1.50)
+       {
+            highrisk = true;
+            $('#overlay_disease').append("Patient is at increased risk for Type 1 Diabetes <br>");
+       }
+       if(genomics_risks[1] >= 1.50) 
+       {
+            highrisk = true;
+            $('#overlay_disease').append("Patient is at increased risk for Type 2 Diabetes <br>");
+       }
+       if(genomics_risks[2] >= 1.50) 
+       {
+            highrisk = true;
+            $('#overlay_disease').append("Patient is at increased risk for Hypertension <br>");
+       }
+       if(genomics_risks[3] >= 1.50) 
+       {
+            highrisk = true;
+            $('#overlay_disease').append("Patient is at increased risk for Coronary Heart Disease <br>");
+       }
+       if(!highrisk)
+            $('#overlay_disease').html("Patient is not at increase genomic risk for any Diabetes related comorbidities");
        var MedList = { 
             Meds: [] 
        };
@@ -1256,6 +1288,7 @@ colors: [
        }
        
        MedList.Meds.push({"Med": 'Pravastatin'});
+       
        
        $.ajax({
                 url: "psql/drugs/",
@@ -1269,13 +1302,12 @@ colors: [
                         }
                         else
                         {
-                            result = "";
+                            result = [];
                             for(var x = 0; x < drugdata.length; x++)
                             {
                                 snp = drugdata[x]['snp'];
-                                alert(snpdata[snp] + drugdata[x]['genotype'] + snp)
                                 if(snpdata[snp] == drugdata[x]['genotype'])
-                                    result += drugdata[x]['advice'] + " <br> "
+                                    result.push(drugdata[x])
                             }
                             if(result == "")
                             {
@@ -1284,8 +1316,31 @@ colors: [
                             }
                             else
                             {
-                                $('#genomics_drug').html(result);
-                                $('#overlay_drug').html(result);
+                                basic = "";
+                                more_data = "";
+                                for(var x = 0; x < result.length; x++)
+                                {
+                                    if(x % 2 == 1)
+                                    {
+                                        basic += "<div class='gray'>";
+                                        more_data += "<div class='gray'>";
+                                    }
+                                    else
+                                    {
+                                        basic += "<div>"
+                                        more_data += "<div>"
+                                    }
+                                    basic += "&middot; " + result[x]['advice'] + "</div>";
+                                    
+                                    more_data += result[x]['snp'];
+	                            more_data += "<div style='width: 68%; float: right; text align: left; margin-left: 2px;'>";
+	                            more_data += result[x]['advice'];
+	                            more_data += "</div><div style='width: 15%; float: right; text align: left; margin-left: 2px'>" 
+	                            more_data += result[x]['genotype'] + "</div></div>";
+                                }
+                                $('#genomics_drug').html(basic);
+                                
+                                $('#overlay_drug').html(more_data);
                             }
                             
                         }
