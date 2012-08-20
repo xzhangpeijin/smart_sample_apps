@@ -1255,15 +1255,45 @@ colors: [
            MedList.Meds.push({"Med": Med.substring(Med.indexOf(",") + 1, Med.indexOf(" "))});
        }
        
+       MedList.Meds.push({"Med": 'Pravastatin'});
+       
        $.ajax({
                 url: "psql/drugs/",
-                dataType: "text",
+                dataType: "json",
                 data: MedList,
                 success: function(drugdata){
-                        alert(drugdata);
+                        if(String(drugdata) == "No Data")
+                        {
+                            $('#genomics_drug').html("No Information Available");
+                            $('#overlay_drug').html("No Information Available");
+                        }
+                        else
+                        {
+                            result = "";
+                            for(var x = 0; x < drugdata.length; x++)
+                            {
+                                snp = drugdata[x]['snp'];
+                                alert(snpdata[snp] + drugdata[x]['genotype'] + snp)
+                                if(snpdata[snp] == drugdata[x]['genotype'])
+                                    result += drugdata[x]['advice'] + " <br> "
+                            }
+                            if(result == "")
+                            {
+                                $('#genomics_drug').html("No Information Available");
+                                $('#overlay_drug').html("No Information Available");
+                            }
+                            else
+                            {
+                                $('#genomics_drug').html(result);
+                                $('#overlay_drug').html(result);
+                            }
+                            
+                        }
                 },
-                error: function(err1, err2) {
-                    alert(err1 + err2);
+                error: function(err1, err2, err3) {
+                    alert(err1 + err2 + err3);
+                    $('#genomics_drug').html("No Information Available");
+                    $('#overlay_drug').html("No Information Available");
                 }
                 
        });
