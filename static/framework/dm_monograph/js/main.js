@@ -737,8 +737,7 @@ var GENOMICS_get = function(){
                 url: snp_url,
                 dataType: "json",
                 success: function(snpdata) {
-                        
-                    $('#genomics_overlay').html("<a rel='#genomics' id='show_genomics_overlay' /> &middot; Genomics Advisor </a>")
+                     
                     hasGenomics = true;
                     var snp;
                     var genotype;
@@ -1276,7 +1275,7 @@ colors: [
             $('#overlay_disease').append("Patient is at increased risk for Coronary Heart Disease <br>");
        }
        if(!highrisk)
-            $('#overlay_disease').html("Patient is not at increase genomic risk for any Diabetes related comorbidities");
+            $('#overlay_disease').html("Patient is not at increased genomic risk for any Diabetes related comorbidities");
        var MedList = { 
             Meds: [] 
        };
@@ -1309,7 +1308,7 @@ colors: [
                                 if(snpdata[snp] == drugdata[x]['genotype'])
                                     result.push(drugdata[x])
                             }
-                            if(result == "")
+                            if(result.length < 1)
                             {
                                 $('#genomics_drug').html("No Information Available");
                                 $('#overlay_drug').html("No Information Available");
@@ -1331,12 +1330,12 @@ colors: [
                                         more_data += "<div>"
                                     }
                                     basic += "&middot; " + result[x]['advice'] + "</div>";
-                                    
+                                    more_data += "<div style='width: 15%; float: left; text align: left; margin-left: 1px;'>"
                                     more_data += result[x]['snp'];
-	                            more_data += "<div style='width: 68%; float: right; text align: left; margin-left: 2px;'>";
+	                            more_data += "</div><div style='width: 68%; float: right; text align: left; margin-left: 2px;'>";
 	                            more_data += result[x]['advice'];
-	                            more_data += "</div><div style='width: 15%; float: right; text align: left; margin-left: 2px'>" 
-	                            more_data += result[x]['genotype'] + "</div></div>";
+	                            more_data += "</div><div style='width: 15%; float: right; text align: left; margin-left: 2px';>" 
+	                            more_data += result[x]['genotype'] + "</div></div><div class='clear'></div>";
                                 }
                                 $('#genomics_drug').html(basic);
                                 

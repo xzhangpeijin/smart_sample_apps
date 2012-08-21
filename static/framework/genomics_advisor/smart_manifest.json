@@ -1,9 +1,9 @@
 {
   "name": "Genomics Advisor",
-  "description": "Loads patient SNP data from remote server and displays clinically relevant information",
+  "description": "Single page view of genomics data based on external patient genome sequencing",
   "author": "Peijin Zhang <xzhangpeijin@gmail.com>",
   "id": "genomics_advisor@apps.smartplatforms.org",
-  "version": ".1a",
+  "version": "1",
   "optimalBrowserEnvironments": ["desktop"],
   "supportedBrowserEnvironments": ["desktop", "tablet"],
 

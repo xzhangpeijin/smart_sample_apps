@@ -1,49 +1,10 @@
 //
-// main.js for Diabetes Monograph App
+// main.js for Genomics Advisor
 //
-// Arjun Sanyal <arjun.sanyal@childrens.harvard.edu>
+// Peijin Zhang
 //
 // Note: A good pt with a lot of data: p967332 William Robinson
 //
-// for tables: http://www.datatables.net/index
-
-// Notes
-// for ASA / Aspirin allergies
-//
-// Salicylic Acids [Chemical/Ingredient]
-// http://purl.bioontology.org/ontology/NDFRT/N0000007582
-// Aspirin [Chemical/Ingredient]
-// http://purl.bioontology.org/ontology/NDFRT/N0000006582
-// Salicylates [Chemical/Ingredient]
-// http://purl.bioontology.org/ontology/NDFRT/N0000006035
-// Acetylsalicylate
-// http://purl.bioontology.org/ontology/LNC/LP16020-7
-//
-// for NSAID allergies
-//
-// Analgesics, nsaids
-// http://purl.bioontology.org/ontology/LNC/LP31430-9
-//
-// for ACE/ARB
-// ACE Inhibitors
-// benazepril (Lotensin)
-// captopril (Capoten)
-// enalapril (Vasotec)
-// fosinopril (Monopril)
-// lisinopril (Prinivil, Zestril)
-// perindopril (Aceon)
-// quinapril (Accupril)
-// ramipril (Altace)
-// trandolapril (Mavik)
-//
-// Angiotensin II Receptor Blockers (ARBs)
-// candesartan (Atacand)
-// eprosartan (Tevetan)
-// irbesartan (Avapro)
-// losartan (Cozaar)
-// olmesartan (Benicar)
-// telmisartan (Micardis)
-// valsartan (Diovan)
 
 // global options
 DM_DEBUG = false;
@@ -74,74 +35,12 @@ var _flot_opts = {
 //
 // Plain lab name implies latest result
 pt = {};
-pt.a1c = null;
-pt.a1c_arr = [];
-pt.a1c_next = null;
-pt.a1c_flot_opts = {};
-pt.allergies_arr = [];
-pt.bday = null;
-pt.bp_flot_opts = {};
-pt.bun = null;
-pt.bun_arr = [];
-pt.bun_next = null;
-pt.bun_flot_opts = {};
-pt.chol_total = null;
-pt.chol_total_arr = [];
-pt.chol_total_next = null;
-pt.chol_total_flot_opts = {};
-pt.creatinine = null;
-pt.creatinine_arr = [];
-pt.creatinine_next = null;
-pt.creatinine_flot_opts = {};
-pt.current_sort = '';
-pt.dbp = null;
-pt.dbp_arr = [];
-pt.dbp_next = null;
-pt.family_name = null;
-pt.flu_shot_date = null;
-pt.fulfillment = null;
-pt.fulfillments_arr = [];
 pt.gender = null;
 pt.given_name = null;
-pt.glucose = null;
-pt.glucose_arr = [];
-pt.glucose_next = null;
-pt.glucose_flot_opts = {};
-pt.hdl = null;
-pt.hdl_arr = [];
-pt.hdl_next = null;
-pt.hdl_flot_opts = {};
-pt.height = null;
-pt.height_arr = [];
-pt.ldl = null;
-pt.ldl_arr = [];
-pt.ldl_next = null;
-pt.ldl_flot_opts = {};
-pt.m_alb_cre_ratio = null;
-pt.m_alb_cre_ratio_arr = [];
-pt.m_alb_cre_ratio_next = null;
-pt.m_alb_cre_ratio_flot_opts = {};
+pt.family_name = null
+pt.bday = null;
 pt.meds_arr = [];
-pt.pneumovax_date = null;
-pt.problems_arr = [];
-pt.reminders_arr = [];
-pt.sbp = null;
-pt.sbp_arr = [];
-pt.sbp_next = null;
-pt.sgot = null;
-pt.sgot_arr = [];
-pt.sgot_next = null;
-pt.sgot_flot_opts = {};
-pt.triglyceride = null;
-pt.triglyceride_arr = [];
-pt.triglyceride_next = null;
-pt.triglyceride_flot_opts = {};
-pt.ur_tp = null;
-pt.ur_tp_arr = [];
-pt.ur_tp_next = null;
-pt.ur_tp_flot_opts = {};
-pt.weight = null;
-pt.weight_arr = [];
+
 
 var _round = function(val, dec){ return Math.round(val*Math.pow(10,dec))/Math.pow(10,dec); }
 
@@ -239,6 +138,8 @@ var GENOMICS_get = function(){
                 url: snp_url,
                 dataType: "json",
                 success: function(snpdata) {
+                        
+                    $('#genomics_overlay').html("<a rel='#genomics' id='show_genomics_overlay' /> &middot; Genomics Advisor </a>")
                     hasGenomics = true;
                     var snp;
                     var genotype;
@@ -315,9 +216,9 @@ var GENOMICS_get = function(){
                         genomics_risks[x] = (Math.round(genomics_risks[x] * 100) / 100);
                         advicetext[x] = "<font color='";
                         
-                        if(genomics_risks[x] <= 0.80)
+                        if(genomics_risks[x] <= 0.75)
                             advicetext[x] += "green'";
-                        else if(genomics_risks[x] >= 1.50 && genomics_risks[x] < 2.00)
+                        else if(genomics_risks[x] >= 1.25 && genomics_risks[x] < 2.00)
                             advicetext[x] += "orange'";
                         else if(genomics_risks[x] >= 2.00)
                             advicetext[x] += "red'";
@@ -416,13 +317,13 @@ var GENOMICS_get = function(){
         var radarchart1 = new Highcharts.Chart({
             
     chart: {
-        renderTo: 'radar_graph1',
+        renderTo: 'radar_graph2',
         polar: 1
     },
     
     title: {
         text: 'Diabetes Mellitus Type 2',
-	margin: 0,
+	margin: 2,
 	y: 5
     },
     
@@ -460,7 +361,7 @@ var GENOMICS_get = function(){
 	    tooltip: {
                 bordercolor: '#4572A7',
                 formatter: function() {
-                    return "<b>SNP: </b>" + genomics_arr[1][Math.round(this.x * genomics_arr[1].length / 360)][0] + "<br><b>Relative Risk: </b>" + genomics_arr[1][Math.round(this.x * genomics_arr[1].length / 360)][4];
+                    return "<b>Type 2 Diabetes</b>" + "<br><b>SNP: </b>" + genomics_arr[1][Math.round(this.x * genomics_arr[1].length / 360)][0] + "<br><b>Relative Risk: </b>" + genomics_arr[1][Math.round(this.x * genomics_arr[1].length / 360)][4];
                 },
 		style: {
 		    fontSize: '8pt'		
@@ -492,7 +393,7 @@ var radardata2 = new Array(genomics_arr[0].length);
         var radarchart2 = new Highcharts.Chart({
             
     chart: {
-        renderTo: 'radar_graph2',
+        renderTo: 'radar_graph1',
         polar: 1
     },
 colors: [
@@ -500,7 +401,9 @@ colors: [
 ],
     
     title: {
-        text: ''
+        text: 'Diabetes Mellitus Type 1',
+	margin: 2,
+	y: 5
 	
     },
     
@@ -578,7 +481,9 @@ colors: [
 ],
     
     title: {
-        text: ''
+       text: 'Hypertension',
+	margin: 2,
+	y: 5
     },
     
     pane: {
@@ -656,7 +561,9 @@ colors: [
 ],
     
     title: {
-        text: ''
+        text: 'Coronary Heart Disease',
+	margin: 2,
+	y: 5
     },
     
     pane: {
@@ -742,15 +649,134 @@ colors: [
                 SNPs[x] += genomics_arr[x][y][5];
                 SNPs[x] += "</div> <div class='clear'></div></div>";
             }
-            SNPs[x] += "<div style='float: right; text-align: right; margin-right: 10px;'><b> Total Relative Risk: " + genomics_risks[x] + " </b></div>"
+            SNPs[x] += "<div style='float: right; text-align: right; margin-right: 10px;'><b> Total Relative Risk: ";
+            if(genomics_risks[x] <= 0.75)
+                SNPs[x] += "<font color='green'>" + genomics_risks[x] + " </b></div>"
+            else if(genomics_risks[x] <= 1.25)
+                SNPs[x] += "<font color='black'>" + genomics_risks[x] + " </b></div>"
+            else if(genomics_risks[x] <= 2.00)
+                SNPs[x] += "<font color='orange'>" + genomics_risks[x] + " </b></div>"
+            else
+                SNPs[x] += "<font color='red'>" + genomics_risks[x] + " </b></div>";
        }
+       
+       highrisk = false;
+       
+       if(genomics_risks[0] >= 1.50)
+       {
+            highrisk = true;
+            $('#overlay_disease').append("Patient is at increased risk for Type 1 Diabetes <br>");
+       }
+       if(genomics_risks[1] >= 1.50) 
+       {
+            highrisk = true;
+            $('#overlay_disease').append("Patient is at increased risk for Type 2 Diabetes <br>");
+       }
+       if(genomics_risks[2] >= 1.50) 
+       {
+            highrisk = true;
+            $('#overlay_disease').append("Patient is at increased risk for Hypertension <br>");
+       }
+       if(genomics_risks[3] >= 1.50) 
+       {
+            highrisk = true;
+            $('#overlay_disease').append("Patient is at increased risk for Coronary Heart Disease <br>");
+       }
+       if(!highrisk)
+            $('#overlay_disease').html("Patient is not at increased genomic risk for any Diabetes related comorbidities");
+       var MedList = { 
+            Meds: [] 
+       };
+       
+       var displaymeds = "";
+       
+       for(var x = 0; x < pt.meds_arr.length; x++)
+       {
+           var Med = String(pt.meds_arr[x]);
+           MedList.Meds.push({"Med": Med.substring(Med.indexOf(",") + 1, Med.indexOf(" "))});
+           if(x != 0)
+                displaymeds += ", ";
+           displaymeds += Med.substring(Med.indexOf(",") + 1, Med.indexOf(" "));
+       }
+       
+       MedList.Meds.push({"Med": 'Pravastatin'});
+       
+       
+       $('#meds').html(displaymeds);
+       
+       if(displaymeds == "")
+            $('#meds').html("Not taking any medication");
+       
+       $.ajax({
+                url: "psql/drugs/",
+                dataType: "json",
+                data: MedList,
+                success: function(drugdata){
+                        if(String(drugdata) == "No Data")
+                        {
+                            $('#genomics_drug').html("No Information Available");
+                            $('#overlay_drug').html("No Information Available");
+                        }
+                        else
+                        {
+                            result = [];
+                            for(var x = 0; x < drugdata.length; x++)
+                            {
+                                snp = drugdata[x]['snp'];
+                                if(snpdata[snp] == drugdata[x]['genotype'])
+                                    result.push(drugdata[x])
+                            }
+                            if(result.length < 1)
+                            {
+                                $('#genomics_drug').html("No Information Available");
+                                $('#overlay_drug').html("No Information Available");
+                            }
+                            else
+                            {
+                                basic = "";
+                                more_data = "";
+                                for(var x = 0; x < result.length; x++)
+                                {
+                                    if(x % 2 == 1)
+                                    {
+                                        basic += "<div class='gray'>";
+                                        more_data += "<div class='gray'>";
+                                    }
+                                    else
+                                    {
+                                        basic += "<div>"
+                                        more_data += "<div>"
+                                    }
+                                    basic += "&middot; " + result[x]['advice'] + "</div>";
+                                    
+                                    more_data += result[x]['snp'];
+	                            more_data += "<div style='width: 68%; float: right; text align: left; margin-left: 2px;'>";
+	                            more_data += result[x]['advice'];
+	                            more_data += "</div><div style='width: 15%; float: right; text align: left; margin-left: 2px'>" 
+	                            more_data += result[x]['genotype'] + "</div></div><div class='clear'></div>";
+                                }
+                                $('#genomics_drug').html(basic);
+                                
+                                $('#overlay_drug').html(more_data);
+                            }
+                            
+                        }
+                },
+                error: function(err1, err2, err3) {
+                    alert(err1 + err2 + err3);
+                    $('#genomics_drug').html("No Information Available");
+                    $('#overlay_drug').html("No Information Available");
+                }
+                
+       });
+                
+              
 
        
        $('#DM1Span').html(SNPs[0]);
        $('#DM2Span').html(SNPs[1]);
        $('#HYPSpan').html(SNPs[2]);
        $('#CHDSpan').html(SNPs[3]);
-	alert(SNPs[0]);
                 },
                 error: function() {
 			$('#DM1Span').html("No genomic Data Available");
@@ -764,6 +790,7 @@ colors: [
                     $('#CHDRisk').html("No Genomics Data Available"); 
                     $('#genomics_graph').html("<img src='./assets/Empty.png' />");
 		    $('#show_genomics_overlay').html("");
+		    $('#genomics_drug').html("No Information Available");
                 }
             });
             }
@@ -778,12 +805,12 @@ colors: [
 // when they are all complete.
 SMART.ready(function(){
   $.when(
-   DEMOGRAPHICS_get(),
-   MEDICATIONS_get()
+     DEMOGRAPHICS_get(),
+     MEDICATIONS_get()
   )
   .then(function(){ 
   
-        GENOMICS_get();
+    GENOMICS_get();
         
      
     // main demo info
