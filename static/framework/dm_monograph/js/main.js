@@ -1345,7 +1345,6 @@ colors: [
                         }
                 },
                 error: function(err1, err2, err3) {
-                    alert(err1 + err2 + err3);
                     $('#genomics_drug').html("No Information Available");
                     $('#overlay_drug').html("No Information Available");
                 }

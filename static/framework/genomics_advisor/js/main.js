@@ -54,7 +54,7 @@ var MEDICATIONS_get = function(){
     SMART.MEDICATIONS_get().then(function(r){
       _(r.object.of_type.Medication).each(function(m){
         // caution: fulfillments are optional
-        pt.fulfillments_arr = m.fulfillment ? pt.fulfillments_arr.concat(m.fulfillment) : pt.fulfillments_arr
+    
         pt.meds_arr.push([
           new XDate(m.startDate).valueOf(),
           m.drugName.dcterms__title,
@@ -318,7 +318,8 @@ var GENOMICS_get = function(){
             
     chart: {
         renderTo: 'radar_graph2',
-        polar: 1
+        polar: 1,
+	height: 250
     },
     
     title: {
@@ -394,7 +395,8 @@ var radardata2 = new Array(genomics_arr[0].length);
             
     chart: {
         renderTo: 'radar_graph1',
-        polar: 1
+        polar: 1,
+	height: 250
     },
 colors: [
 	'#AA4643',
@@ -474,7 +476,8 @@ var radardata3 = new Array(genomics_arr[2].length);
             
     chart: {
         renderTo: 'radar_graph3',
-        polar: 1
+        polar: 1,
+	height: 250
     },
 colors: [
 	'#89A54E', 
@@ -553,7 +556,8 @@ var radardata4 = new Array(genomics_arr[3].length);
             
     chart: {
         renderTo: 'radar_graph4',
-        polar: 1
+        polar: 1,
+	height: 250
     },
 
 colors: [
@@ -763,13 +767,11 @@ colors: [
                         }
                 },
                 error: function(err1, err2, err3) {
-                    alert(err1 + err2 + err3);
                     $('#genomics_drug').html("No Information Available");
                     $('#overlay_drug').html("No Information Available");
                 }
                 
        });
-                
               
 
        
