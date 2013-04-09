@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
   <!--
     SMART Diabetes Monograph
     ========================
@@ -22,6 +23,7 @@
       <script src='../smart/scripts/smart-api-client.js'></script>
       <!-- note: we take the SMART jQuery object and make it global -->
       <script> $ = jQuery = SMART.$; </script>
+      <script src='./js/language/guo_language.js'></script>      
       <script src='./js/xdate.js'></script>
       <script src='./js/jsonld.js'></script>
       <script src='./js/flot/jquery.flot.min.js'></script>
@@ -33,11 +35,20 @@
       <script src='./js/highcharts.js'></script>
       <script src='./js/highcharts-more.js'></script>
       <script src='./js/main.js'></script>
-   
+      
   </head>
-  <body>
-   
-    <div id='app_title_line'>
+  <body> 
+
+	<!--<a href='' id="buttonToChangeLanguage">Translate to Chinese</a><br>-->
+	<button type="button" id="buttonToChangeLanguage" >Translate to Chinese</button><br>
+	<a href='' onclick="window.open('https://api.23andme.com/authorize/?redirect_uri=http://localhost:8001/hello&response_type=code&client_id=b7ff57f150ce71259d9ee30ceec49098&scope=basic haplogroups names rs1465788 rs4900384 rs7202877 rs757411 rs425105 rs5753037 rs1051708 rs7804356 rs9388489 rs4763879 rs3087243 rs3825932 rs2292239 rs2664170 rs3129934 rs1990760 rs3024505 rs6822844 rs4788084 rs2104286 rs3741208 rs725613 rs2290400 rs6679677 rs2542151 rs3184504 rs3746722 rs3788013 rs2877716 rs243021 rs7756992 rs2383208 rs1552224 rs780094 rs4607517 rs1111875 rs2612067 rs4402960 rs2943641 rs864745 rs5215 rs2237892 rs972283 rs2793831 rs1801282 rs8042680 rs340874 rs4430796 rs7903146 rs7578597 rs7961581 rs4457053 rs1163439 rs12413409 rs1378942 rs17367504 rs751891 rs4293393 rs599839 rs4773144 rs1746048 rs1243607 rs1412444 rs2291834 rs9818870 rs974819 rs7739181 rs9982601 rs6725887 rs20417 rs20455 rs2306283 rs4149056 rs4149081 rs11191548 rs11209716 rs11739136 rs12946454 rs1799722 rs2016848 rs2070744 rs3025058 rs4149601 rs495828 rs4961 rs5065 rs5182 rs5186 rs6749447 rs699 rs7297610 rs880054','','height=400,width=400,scrollbars=1,menubar=0,location=0,directories=0');
+" id='connectWithGenomicsServer'>Connect with Genomics Server</a>
+	
+	<br>
+    <a href='' id='reconnect' onclick="window.open('http://localhost:8001/hello','','height=400,width=400,scrollbars=1,menubar=0,location=0,directories=0');">Reconnect</a>
+    <br>
+    <a href='' id='cleanData' onclick="window.open('http://localhost:8001/auth','','height=400,width=400,scrollbars=1,menubar=0,location=0,directories=0');">Clean patient data</a>
+	<div id='app_title_line'>
       <img class='smart_bug' src='./assets/smart_bug.png' />
       SMART Diabetes Monograph
     </div>
@@ -51,16 +62,16 @@
         <div class='diabetic_diagnosis_p' style='width: 48%; float: left; text-align: right; margin-bottom: 10px;'>
           &nbsp;
           <!-- <span class='demo_line_label' style='display: none;' class='diabetic_info_label'>DIAGNOSIS</span> -->
-          <span class='diabetic_info highlight'></span>
-          <span class='diabetic_how_long_text highlight'></span>
+          <span class='diabetic_info highlight' id='diabetic_info_label'></span>
+          <span class='diabetic_how_long_text highlight' id='diabetic_how_long_text_label'></span>
         </div>
       </div>
 
       <div class='demo_line' style='font-weight: normal !important; font-size: 14px;'>
         <div style='width: 38%; float: left'>
-          <span class='demo_line_label'>DOB</span> <span class='birthday'></span>&nbsp;&nbsp;
-          <span class='demo_line_label'>AGE</span> <span class='age'></span>&nbsp;&nbsp;
-          <span class='demo_line_label'>SEX</span> <span class='gender'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='DateOfBirth'>DOB</span> <span class='birthday'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='age'>AGE</span> <span class='age'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='sex'>SEX</span> <span class='gender' id='gender_sex'></span>&nbsp;&nbsp;
         </div>
         <div style='float: left; width: 60%; text-align: right; font-size: small;'>
           <a rel='#pt_summary' id='show_pt_summary_overlay'/>Patient Summary</a>
@@ -75,29 +86,29 @@
       <div class='clear'></div>
 
       <div id='column_1' class='grid_3'>
-        <div class='section_header'>
-          BP <span class='normal smaller'>goal <span class='medium'>&lt; 130/80</span>&thinsp;mm/hg</span>
+        <div class='section_header' id='BP_Graph_header'>
+          BP <span class='normal smaller' id='goal'>goal <span class='medium'>&lt; 130/80</span>&thinsp;mm/hg</span>
         </div>
 
         <div id='bp_graph'></div>
 <div class = 'clear'></div>
-<div class='section_header'>
+<div class='section_header' id='Genomics_Advisor_FirstCol'>
           Genomics Advisor
 	</div>
 	
 	
 	<div>
-		<div style='width: 60%; float: left; text-align: left;'> <b>Patient ID:</b> </div>
+		<div style='width: 60%; float: left; text-align: left;' id='Patient_ID'> <b>Patient ID:</b> </div>
 		<div id='genomics_id' style='width: 35%; float: left; text-align: right;'></div>
 	</div>
 	<div class='gray'>
-                <div style='width: 60%; float: left; text-align: left;'> <b>Data format: </b> </div>
+                <div style='width: 60%; float: left; text-align: left;' id='Data_format'> <b>Data format: </b> </div>
 		<div id='genomics_format' style='width: 35%; float: left; text-align: right;'></div>		
 	</div>
 
 <div class = 'clear'></div>
         <div class='section_header'>
-          <div style='width: 60%; float: left'>Last Known Values</div>
+          <div style='width: 60%; float: left' id='Last_Known_Values'>Last Known Values</div>
           <div style='width: 38%; float: left; text-align: right'>
             <a id='show_overlay' rel="#lkv_overlay"/>[Graph]</a>
           </div>
@@ -106,72 +117,72 @@
 
         <div class="grid_1 alpha" style='width: 37%; margin-right: 0px;'>
           <div>
-            <span class='test_name'>Ur tp</span>
+            <span class='test_name' id='urTp'>Ur tp</span>
             <span class='smaller' id='ur_tp_unit'></span>
           </div>
           <div class='smaller'>0-135</div>
 
           <div class='gray' style='margin-top: -1px;'>
-            <span class='test_name'>&micro;alb/cre</span>
+            <span class='test_name' id='alb_cre'>&micro;alb/cre</span>
             <span class='smaller' id='m_alb_cre_ratio_unit'></span>
           </div>
           <div class='gray smaller'>&lt; 30.0</div>
 
           <div>
-            <span class='test_name'>SGOT</span>
+            <span class='test_name' id='SGOT'>SGOT</span>
             <span class='smaller' id='sgot_unit'></span>
           </div>
           <div class='smaller'>10-40</div>
 
           <div class='gray' style='margin-top: -1px;'>
-            <span class='test_name'>Chol</span>
+            <span class='test_name' id='chol'>Chol</span>
             <span class='smaller' id='chol_total_unit'></span>
           </div>
           <div class='gray smaller'>&lt;&thinsp;200</div>
 
           <div>
-            <span class='test_name'>Tri</span>
+            <span class='test_name' id='tri'>Tri</span>
             <span class='smaller' id='triglyceride_unit'></span>
           </div>
           <div class='smaller'>&lt;&thinsp;150</div>
 
           <div class='gray' style='margin-top: -1px;'>
-            <span class='test_name'>HDL</span>
+            <span class='test_name' id='hdl'>HDL</span>
             <span class='smaller' id='hdl_unit'></span>
           </div>
           <div class='gray smaller'>&gt;&thinsp;40</div>
 
           <div>
-            <span class='test_name'>LDL</span>
+            <span class='test_name' id='ldl'>LDL</span>
             <span class='smaller' id='ldl_unit'></span>
           </div>
           <div class='smaller'>&lt;&thinsp;100</div>
 
           <div class='gray' style='margin-top: -1px;'>
-            <span class='test_name'>BUN</span>
+            <span class='test_name' id='bun'>BUN</span>
             <span class='smaller' id='bun_unit'></span>
           </div>
           <div class='gray smaller'>8%-25%</div>
 
           <div>
-            <span class='test_name'>Cre</span>
+            <span class='test_name' id='cre_label'>Cre</span>
             <span class='smaller' id='creatinine_unit'></span>
           </div>
           <div class='smaller'>0.6-1.5</div>
 
           <div class='gray' style='margin-top: -1px;'>
-            <span class='test_name'>Glu</span>
+            <span class='test_name' id='glu_label'>Glu</span>
             <span class='smaller' id='glucose_unit'></span>
           </div>
           <div class='gray smaller'>70-110</div>
 
           <div>
-            <span class='test_name'>A1C</span>
+            <span class='test_name' id='a1c_label'>A1C</span>
             <span class='smaller' id='a1c_unit'></span>
           </div>
           <div class='smaller'>&lt;&thinsp;7%</div>
         </div>
-
+	
         <div class="grid_1" style='width: 31%; margin-left: 0px; margin-right: 0px;'>
           <div>
             <span id='ur_tp_val' class='test_value'>&nbsp;</span>
@@ -329,12 +340,12 @@
           <div>
             <span id='a1c_next_date'>&nbsp;</span>
           </div>
-        </div>
+        </div>	
       </div>
 
       <div id='column_2' class='grid_3'>
-        <div class='section_header'>
-          LDL <span class='normal smaller'>goal <span class='medium'>&lt; 100</span>&thinsp;mg/dL</span>
+        <div class='section_header' id='ldl_header'>
+          LDL <span class='normal smaller' id='goal'>goal <span class='medium'>&lt; 100</span>&thinsp;mg/dL</span>
         </div>
 
         <div id='ldl_graph'></div>
@@ -343,7 +354,7 @@
           <div class='section_header'>Other Info</div>
 
           <div>
-            <div style='width: 28%; float: left'><span class='bold'>weight</span></div>
+            <div style='width: 28%; float: left' id='weight_label'><span class='bold'>weight</span></div>
             <div style='width: 40%; float: left'>lbs <span id='weight_val_lb'></span>
               &nbsp;<span class='x-grayer'>kg <span id='weight_val_kg'></span></span>
             </div>
@@ -352,7 +363,7 @@
           </div>
 
           <div class='gray'>
-            <div style='width: 28%; float: left'><span class='bold'>height</span></div>
+            <div style='width: 28%; float: left' id='height_label'><span class='bold'>height</span></div>
             <div style='width: 40%; float: left'>in <span id='height_val_in'></span>
               &nbsp;<span class='x-grayer'>cm <span id='height_val_cm'></span></span>
             </div>
@@ -361,44 +372,44 @@
           </div>
 
           <div>
-            <div style='width: 49%; float: left'><span class='bold'>last foot exam</span></div>
+            <div style='width: 49%; float: left' id='last_foot_exam'><span class='bold'>last foot exam</span></div>
             <!-- hack: just make highlight since we don't have this data yet -->
             <div style='width: 49%; float: left; text-align: right' id='foot_exam_date' class=''>Unknown</div>
             <div class='clear'></div>
           </div>
 
           <div class='gray'>
-            <div style='width: 49%; float: left'><span class='bold'>last eye exam</span></div>
+            <div style='width: 49%; float: left' id='last_eye_exam'><span class='bold'>last eye exam</span></div>
             <div style='width: 49%; float: left; text-align: right' id='eye_exam_date' class=''>Unknown</div>
             <div class='clear'></div>
           </div>
 
           <div>
-            <div style='width: 30%; float: left'><span class='bold'>smoking</span></div>
+            <div style='width: 30%; float: left' id='smoking'><span class='bold'>smoking</span></div>
             <div style='width: 68%; float: left; text-align: right' id='smoking_status'>Unknown</div>
             <div class='clear'></div>
           </div>
 
           <div class='gray'>
-            <div style='width: 30%; float: left'><span class='bold'>aspirin</span></div>
+            <div style='width: 30%; float: left' id='aspirin_label'><span class='bold'>aspirin</span></div>
             <div style='width: 68%; float: left; text-align: right' id='aspirin_tolerance'>Unknown</div>
             <div class='clear'></div>
           </div>
 
           <div>
-            <div style='width: 30%; float: left'><span class='bold'>ACE/ARB</span></div>
+            <div style='width: 30%; float: left' id='ace_arb'><span class='bold'>ACE/ARB</span></div>
             <div style='width: 68%; float: left; text-align: right' id='ace_arb_status'>Unknown</div>
             <div class='clear'></div>
           </div>
 
           <div class='gray'>
-            <div style='width: 68%; float: left'><span class='bold'>last pneumovax</span></div>
+            <div style='width: 68%; float: left' id='last_pneumovax'><span class='bold'>last pneumovax</span></div>
             <div style='width: 30%; float: left; text-align: right' id='pneumovax_date' class=''></div>
             <div class='clear'></div>
           </div>
 
           <div>
-            <div style='width: 68%; float: left'><span class='bold'>last flu shot</span></div>
+            <div style='width: 68%; float: left' id='last_flu_shot'><span class='bold'>last flu shot</span></div>
             <div style='width: 30%; float: left; text-align: right' id='flu_shot_date' class=''></div>
             <div class='clear'></div>
           </div>
@@ -406,17 +417,17 @@
 
         <div id='problems_header'>
           <!-- hidden problems div for sorting. todo: clean this up in the js-->
-          <div class='section_header'>Problems <span id='as_of'></span></div>
+          <div class='section_header' id='Problems_label'>Problems <span id='as_of'></span></div>
 
           <div id='problems' style='display: none'></div>
 
           <div id='major_cv_comorbidities'>
-            <div class='section_subheader'>Major CV Comorbidities</div>
+            <div class='section_subheader' id='Major_CV'>Major CV Comorbidities</div>
             <div id='cv_comorbidities'></div>
           </div>
 
           <div>
-            <div class='section_subheader'>Others</div>
+            <div class='section_subheader' id='Others'>Others</div>
             <div id='other_problems'></div>
           </div>
 
@@ -430,8 +441,8 @@
 
       <div id='column_3' class='grid_6'>
         <div>
-          <div class='section_header' style='width: 48%; float: left'> A1C <span class='normal smaller'>goal <span class='medium'>&lt; 7%</span></span></div>
-<div class='section_header' style='width: 48%; float: right; text-align: left;'> Genomics Visualization </div>
+          <div class='section_header' style='width: 48%; float: left' id='A1C_header'> A1C <span class='normal smaller'>goal <span class='medium'>&lt; 7%</span></span></div>
+<div class='section_header' style='width: 48%; float: right; text-align: left;' id='GenomicsVisualization'> Genomics Visualization </div>
           <div class='clear'></div>
 
         <div style='height: 100px; width:49%; float: left;'>
@@ -447,42 +458,42 @@
         <div class='clear'></div>
 
         <div id='reminders_outer'>
-          <div class='section_header'>Reminders</div>
+          <div class='section_header' id='reminders_label'>Reminders</div>
           <div id='reminders'></div>
         </div>
 
         <div id='allergies_outer'>
-          <div class='section_header'>Allergies</div>
+          <div class='section_header' id='Allergies_label'>Allergies</div>
           <div id='allergies'></div>
         </div>
 
         <div id='medications_outer'>
-          <div class='section_header'>Medications <span id='meds_as_of'></span></div>
+          <div class='section_header' id='Medications_label'>Medications <span id='meds_as_of'></span></div>
           <div id='medications'></div>
         </div>
 	
 	<div id='genomics_outer'>
-          <div class='section_header'>Genomics Data</div>
+          <div class='section_header' id='Genomics_Data'>Genomics Data</div>
 
-		<div class='section_subheader'> Relative Risks </div>
+		<div class='section_subheader' id='Relative_Risks'> Relative Risks </div>
 		<div>
-			<div style='width: 40%; float: left; text-align: left;'><b> Diabetes Mellitus 1: </b> </div> 
+			<div style='width: 40%; float: left; text-align: left;' id='DiabetesMellitus1'><b> Diabetes Mellitus 1: </b> </div> 
 			<div id='DM1Risk' style='width: 60%; float: left; text-align: left;'></div> <br>
 		</div>
 		
 		<div class='gray'>
-			<div style='width: 40%; float: left; text-align: left;'><b> Diabetes Mellitus 2: </b> </div> 
+			<div style='width: 40%; float: left; text-align: left;' id='DiabetesMellitus2'><b> Diabetes Mellitus 2: </b> </div> 
 			<div id='DM2Risk' style='width: 60%; float: left; text-align: left;'></div> <br>
 		</div>
 
 		<div>
-			<div style='width: 40%; float: left; text-align: left;'><b> Hypertension: </b> </div>
+			<div style='width: 40%; float: left; text-align: left;' id='Hypertension'><b> Hypertension: </b> </div>
 			<div id='HYPRisk' style='width: 60%; float: left; text-align: left;'></div> <br>
 		</div>
 		
 		<div class='gray'>
 		
-		        <div style='width: 40%; float: left; text-align: left;'><b> Coronary Heart Disease: </b> </div>
+		        <div style='width: 40%; float: left; text-align: left;' id='Coronary_Heart_Disease'><b> Coronary Heart Disease: </b> </div>
 			<div id='CHDRisk' style='width: 60%; float: left; text-align: left;'></div> <br>
 			
 		</div>
@@ -490,7 +501,7 @@
 
 	<div class='clear'> </div>
 
-          <div class='section_subheader'> Drug Information </div>
+          <div class='section_subheader' id='Drug_Info'> Drug Information </div>
                <div id='genomics_drug'></div>  
 
         </div>
@@ -500,7 +511,7 @@
 
     <div class="lkv_overlay" id="lkv_overlay">
       <div id='lkv_overlay_title_line'>
-        <div style='width: 78%; float: left; margin-left: 10%'>
+        <div style='width: 78%; float: left; margin-left: 10%' id='Lab_Graphs'>
           <img class='smart_bug' src='./assets/smart_bug.png' />
           SMART Diabetes Monograph Lab Graphs
         </div>
@@ -525,15 +536,15 @@
 
       <div class='demo_line' style='font-weight: normal !important; font-size: 14px;'>
         <div style='width: 48%; float: left'>
-          <span class='demo_line_label'>DOB</span> <span class='birthday'></span>&nbsp;&nbsp;
-          <span class='demo_line_label'>AGE</span> <span class='age'></span>&nbsp;&nbsp;
-          <span class='demo_line_label'>SEX</span> <span class='gender'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='dob_2'>DOB</span> <span class='birthday'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='age_2'>AGE</span> <span class='age'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='sex_2'>SEX</span> <span class='gender'></span>&nbsp;&nbsp;
         </div>
       </div>
 
       <div class='clear'></div>
 
-      <div class="section_header">Urine Total Protein</div>
+      <div class="section_header" id='UTP'>Urine Total Protein</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='ur_tp_graph'></div>
@@ -542,7 +553,7 @@
       </div>
       <div class='clear'></div>
 
-      <div class="section_header">&micro;alb/cre</div>
+      <div class="section_header" id='alb_cre_label'>&micro;alb/cre</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='m_alb_cre_ratio_graph'></div>
@@ -551,7 +562,7 @@
       </div>
       <div class='clear'></div>
 
-      <div class="section_header">SGOT</div>
+      <div class="section_header" id='SGOT_1'>SGOT</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='sgot_graph'></div>
@@ -560,7 +571,7 @@
       </div>
       <div class='clear'></div>
 
-      <div class="section_header">Cholesterol</div>
+      <div class="section_header" id='Cholesterol'>Cholesterol</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='chol_total_graph'></div>
@@ -569,7 +580,7 @@
       </div>
       <div class='clear'></div>
 
-      <div class="section_header">Tri</div>
+      <div class="section_header" id='tri_1'>Tri</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='triglyceride_graph'></div>
@@ -578,7 +589,7 @@
       </div>
       <div class='clear'></div>
 
-      <div class="section_header">HDL</div>
+      <div class="section_header" id='hdl_1'>HDL</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='hdl_graph'></div>
@@ -587,7 +598,7 @@
       </div>
       <div class='clear'></div>
 
-      <div class="section_header">LDL</div>
+      <div class="section_header" id='ldl_1'>LDL</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='ldl_graph_lkv'></div>
@@ -596,7 +607,7 @@
       </div>
       <div class='clear'></div>
 
-      <div class="section_header">BUN</div>
+      <div class="section_header" id='bun_1'>BUN</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='bun_graph'></div>
@@ -605,7 +616,7 @@
       </div>
       <div class='clear'></div>
 
-      <div class="section_header">Creatinine</div>
+      <div class="section_header" id='Creatinine_label'>Creatinine</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='creatinine_graph'></div>
@@ -614,7 +625,7 @@
       </div>
       <div class='clear'></div>
 
-      <div class="section_header">Glucose</div>
+      <div class="section_header" id='Glucose_label'>Glucose</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='glucose_graph'></div>
@@ -623,7 +634,7 @@
       </div>
       <div class='clear'></div>
 
-      <div class="section_header">A1C</div>
+      <div class="section_header" id='a1c_header_1'>A1C</div>
       <div>
         <div class='lkv_graph_div'>
           <div class='lkv_graph' id='a1c_graph_lkv'></div>
@@ -636,7 +647,7 @@
 
     <div id="pt_summary" class="pt_summary">
       <div id='pt_summary_title_line'>
-        <div style='width: 78%; float: left; margin-left: 10%'>
+        <div style='width: 78%; float: left; margin-left: 10%' id='Patient_Summary'>
           <img class='smart_bug' src='./assets/smart_bug.png' />
           SMART Diabetes Patient Summary
         </div>
@@ -661,9 +672,9 @@
 
       <div class='demo_line' style='font-weight: normal !important; font-size: 14px;'>
         <div style='width: 48%; float: left'>
-          <span class='demo_line_label'>DOB</span> <span class='birthday'></span>&nbsp;&nbsp;
-          <span class='demo_line_label'>AGE</span> <span class='age'></span>&nbsp;&nbsp;
-          <span class='demo_line_label'>SEX</span> <span class='gender'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id="dob_patient">DOB</span> <span class='birthday'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='age_patient'>AGE</span> <span class='age'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='sex_patient'>SEX</span> <span class='gender'></span>&nbsp;&nbsp;
         </div>
       </div>
 
@@ -671,32 +682,32 @@
 
       <div class='clear'></div>
 
-      <div class="section_header"><span class='section_header_number'>&#10122;</span> About This Summary</div>
+      <div class="section_header"  id='about'><span class='section_header_number'>&#10122;</span> About This Summary</div>
 
-      <div style='margin-left: 10px'>
+      <div style='margin-left: 10px' id='total'>
         This report summarizes information about your diagnosis of diabetes type 2
       </div>
 
-      <div class="section_header"><span class='section_header_number'>&#10123;</span> Your Test Results</div>
+      <div class="section_header" id='test_result'><span class='section_header_number'>&#10123;</span> Your Test Results</div>
 
       <div class='test_ps'>
         <div style='width: 33%; float: left'>
-          <div class='header'>Blood Pressure</div>
+          <div class='header' id='bp_patient'>Blood Pressure</div>
           <div class='ps_graph' id='bp_graph_ps'></div>
         </div>
         <div style='width: 63%; float: left; margin-top: 16px;'>
           <div style='width: 45%; float: left;  margin-right: 10px;'>
-            <div><span class='label'>LAST TEST</span> <span id='bp_date_ps'></span></div>
+            <div><span class='label' id='last_test'>LAST TEST</span> <span id='bp_date_ps'></span></div>
           </div>
           <div style='width: 50%; float: left'>
             <div>
               <span style='color: #afd8f8; font-weight: bold'>O</span>
-              <span class='label'>SYSTOLIC VALUE</span>
+              <span class='label' id='SYSTOLIC_VALUE'>SYSTOLIC VALUE</span>
               <span id='bp_systolic_ps'></span>
             </div>
             <div>
               <span style='color: #EDC240; font-weight: bold'>O</span>
-              <span class='label'>DIASTOLIC VALUE</span>
+              <span class='label' id='DIASTOLIC_VALUE'>DIASTOLIC VALUE</span>
               <span id='bp_diastolic_ps'></span>
             </div>
           </div>
@@ -707,7 +718,7 @@
 
       <div class='test_ps'>
         <div style='width: 33%; float: left'>
-          <div class='header'>LDL</div>
+          <div class='header' id='ldl_label'>LDL</div>
           <div class='ps_graph' id='ldl_graph_ps'></div>
         </div>
         <div style='width: 63%; float: left; margin-top: 16px;'>
@@ -717,7 +728,7 @@
           </div>
 
           <div style='margin-bottom: 8px;'>
-            <span class='label'>LAST TEST</span> <span id='ldl_date_ps'></span>
+            <span class='label' id='last_test_2'>LAST TEST</span> <span id='ldl_date_ps'></span>
           </div>
 
           <div><span id='ldl_ps'></span></div>
@@ -728,7 +739,7 @@
 
       <div class='test_ps'>
         <div style='width: 33%; float: left'>
-          <div class='header'>A1C</div>
+          <div class='header' id='a1cHeader'>A1C</div>
           <div class='ps_graph' id='a1c_graph_ps'></div>
         </div>
         <div style='width: 63%; float: left; margin-top: 16px;'>
@@ -736,7 +747,7 @@
             The A1C test measures average blood sugar concentration
           </div>
           <div style='margin-bottom: 8px;'>
-            <span class='label'>LAST TEST</span> <span id='a1c_date_ps'></span>
+            <span class='label' id='last_test_3'>LAST TEST</span> <span id='a1c_date_ps'></span>
           </div>
           <div><span id='a1c_ps'></span></div>
         </div>
@@ -748,14 +759,14 @@
 
       <div>
         <div style='width: 33%; float: left'>
-          <div class="section_header">
+          <div class="section_header" id='Your_Allergies'>
             <span class='section_header_number'>&#10124;</span>
             Your Allergies
           </div>
           <div id='allergies_ps' style="margin-left: 10px;"></div>
         </div>
         <div style='width: 63%; float: left;'>
-          <div class="section_header">
+          <div class="section_header" id='Your_Medications'>
             <span class='section_header_number'>&#10125;</span>
             Your Medications
           </div>
@@ -768,7 +779,7 @@
 
       <br />
 
-      <div class="section_header">
+      <div class="section_header" id='what'>
         <span class='section_header_number'>&#10126;</span> What Should You Do Now?
       </div>
 
@@ -951,12 +962,12 @@
 
    <div id="genomics" class="genomics">
       <div id='genomics_title_line'>
-        <div style='width: 78%; float: left; margin-left: 10%'>
+        <div style='width: 78%; float: left; margin-left: 10%' id='genomics_title'>
           <img class='smart_bug' src='./assets/smart_bug.png' />
           SMART Diabetes Monograph Genomics Advisor
         </div>
         <div style='width: 20%; float: left; text-align: right; margin-left: -10%; font-size: smaller'>
-          <a class='close' href='#'>[Close]</a>
+          <a class='close' href='#' id='genomics_close'>[Close]</a>
         </div>
       </div>
 
@@ -964,31 +975,31 @@
       
         <div>
         <div style='width: 49%; float: left'>
-            <div class='section_header'>
+            <div class='section_header' id='genomic_snp'>
 	    SNP
-	    <div style='width: 17%; float: right; text-align: right; margin-right: 5px'>Frequency</div>
-	    <div style='width: 13%; float: right; text align: left;'> Risk </div>
-	    <div style='width: 11%; float: right; text align: left;'> Code </div>
+	    <div style='width: 17%; float: right; text-align: right; margin-right: 5px' >Frequency</div>
+	    <div style='width: 13%; float: right; text align: left;' id> Risk </div>
+	    <div style='width: 11%; float: right; text align: left;' id> Code </div>
 	    <div style='width: 13%; float: right; text align: left;'> CHRM </div>
 	    <div style='width: 20%; float: right; text align: left; margin-left: 1px'> Locus </div>
             </div>
 	  
-	  <div class='section_subheader'> Type 1 Diabetes  </div>
+	  <div class='section_subheader' id='type1'> Type 1 Diabetes  </div>
 	  <div id='DM1Span'></div>
 	  
-          <div class='section_subheader' style='margin-top: 20px'> Type 2 Diabetes  </div>
+          <div class='section_subheader' style='margin-top: 20px' id='type2'> Type 2 Diabetes  </div>
           <div id='DM2Span'></div>
           
-          <div class='section_subheader' style='margin-top: 20px'> Hypertension  </div>
+          <div class='section_subheader' style='margin-top: 20px' id='hyper_label'> Hypertension  </div>
           <div id='HYPSpan'></div>
           
-          <div class='section_subheader' style='margin-top: 20px'> Coronary Heart Disease  </div>
+          <div class='section_subheader' style='margin-top: 20px' id='CoronaryHeartDisease'> Coronary Heart Disease  </div>
           <div id='CHDSpan'></div>
          
         </div>
         
         <div style='width: 49%; float: right; margin-right: 10px;'>
-		<div class='section_header'> Radar Graphs </div>
+		<div class='section_header' id='radar_graphs_2'> Radar Graphs </div>
 		<div style='width: 250px; float: left;'>
 		<div id="radar_graph1" style="width: 250px; height:300px;"></div>		
 		</div>
@@ -1000,11 +1011,11 @@
 
 		<div class='clear'> </div>
 
-                <div class='section_header'> Genomics Advice </div>
-                <div class='section_subheader'> Disease Info </div>
+                <div class='section_header' id='advice'> Genomics Advice </div>
+                <div class='section_subheader' id='disease_info'> Disease Info </div>
                         <div id='overlay_disease'></div>
-                <div class='section_header'> Drug Advice </div>
-                <div class='section_subheader'>
+                <div class='section_header' id='drug_advice'> Drug Advice </div>
+                <div class='section_subheader' id='snp_sub_title'>
 	    SNP
 	    <div style='width: 68%; float: right; text align: left;'> Advice </div>
 	    <div style='width: 15%; float: right; text align: left; margin-left: -4px'> Genotype </div>

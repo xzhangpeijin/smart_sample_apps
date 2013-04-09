@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <!--
     SMART Diabetes Monograph
     ========================
@@ -22,6 +23,7 @@
       <script src='../smart/scripts/smart-api-client.js'></script>
       <!-- note: we take the SMART jQuery object and make it global -->
       <script> $ = jQuery = SMART.$; </script>
+      <script src='./js/language/guo_language_for_genomics_advisor.js'></script>   
       <script src='./js/xdate.js'></script>
       <script src='./js/jsonld.js'></script>
       <script src='./js/flot/jquery.flot.min.js'></script>
@@ -36,7 +38,7 @@
    
   </head>
   <body>
-   
+   <button type="button" id="buttonToChangeLanguage" >Translate to Chinese</button><br>
     <div id='app_title_line'>
       <img class='smart_bug' src='./assets/smart_bug.png' />
       SMART Diabetes Monograph
@@ -55,9 +57,9 @@
 
       <div class='demo_line' style='font-weight: normal !important; font-size: 14px;'>
         <div style='width: 38%; float: left'>
-          <span class='demo_line_label'>DOB</span> <span class='birthday'></span>&nbsp;&nbsp;
-          <span class='demo_line_label'>AGE</span> <span class='age'></span>&nbsp;&nbsp;
-          <span class='demo_line_label'>SEX</span> <span class='gender'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='dob'>DOB</span> <span class='birthday'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='age'>AGE</span> <span class='age'></span>&nbsp;&nbsp;
+          <span class='demo_line_label' id='sex'>SEX</span> <span class='gender'></span>&nbsp;&nbsp;
         </div>
       </div>
 
@@ -65,7 +67,7 @@
       
       <div>
         <div style='width: 44%; float: left'>
-            <div class='section_header'>
+            <div class='section_header' id='snp_header'>
 	    SNP
 	    <div style='width: 17%; float: right; text-align: right; margin-right: 5px'>Frequency</div>
 	    <div style='width: 13%; float: right; text align: left;'> Risk </div>
@@ -74,21 +76,21 @@
 	    <div style='width: 20%; float: right; text align: left; margin-left: 1px'> Locus </div>
             </div>
 	  
-	  <div class='section_subheader'> Type 1 Diabetes  </div>
+	  <div class='section_subheader' id='type1'> Type 1 Diabetes  </div>
 	  <div id='DM1Span'></div>
 	  
-          <div class='section_subheader' style='margin-top: 20px'> Type 2 Diabetes  </div>
+          <div class='section_subheader' style='margin-top: 20px' id='type2'> Type 2 Diabetes  </div>
           <div id='DM2Span'></div>
           
-          <div class='section_subheader' style='margin-top: 20px'> Hypertension  </div>
+          <div class='section_subheader' style='margin-top: 20px' id='Hypertension_label'> Hypertension  </div>
           <div id='HYPSpan'></div>
           
-          <div class='section_subheader' style='margin-top: 20px'> Coronary Heart Disease  </div>
+          <div class='section_subheader' style='margin-top: 20px' id='Coronary_Heart_Disease_label'> Coronary Heart Disease  </div>
           <div id='CHDSpan'></div>
         
         <br>
         
-        <div class='section_header'> Disease Information </div>
+        <div class='section_header' id='disease_info'> Disease Information </div>
                         <div id='overlay_disease'></div>
                         
         </div>
@@ -96,13 +98,13 @@
         <div style='width: 54%; float: right; margin-right: 10px;'>
 	
 	<div style='width: 52%; float: left;'>
-	<div class='section_header'> Genomics Data </div>
+	<div class='section_header' id='genomics_data'> Genomics Data </div>
 	<div>
-		<div style='width: 60%; float: left; text-align: left;'> <b>Patient ID:</b> </div>
+		<div style='width: 60%; float: left; text-align: left;' id='patient_id'> <b>Patient ID:</b> </div>
 		<div id='genomics_id' style='width: 35%; float: left; text-align: right;'></div>
 	</div>
 	<div class='gray'>
-                <div style='width: 60%; float: left; text-align: left;'> <b>Data format: </b> </div>
+                <div style='width: 60%; float: left; text-align: left;' id='data_format'> <b>Data format: </b> </div>
 		<div id='genomics_format' style='width: 35%; float: left; text-align: right;'></div>		
 	</div>
 	
@@ -110,19 +112,19 @@
 	<br>
 
 	<div></div>
-	<div class='section_subheader'> Current Medications </div>
+	<div class='section_subheader' id='Current_Medications'> Current Medications </div>
 	<div id='meds'> </div>
 	<div></div>
 	</div>
 
 
         <div style='width: 44%; float: right;'>
-	<div class='section_header'>Risk Graph</div>
+	<div class='section_header' id='Risk_Graph'>Risk Graph</div>
 	<div id="genomics_graph" style='width: 100%; height: 100px;'></div>
 	</div>
 
         <div class='clear'></div>
-	<div class='section_header'> Radar Graphs </div>
+	<div class='section_header' id='Radar_Graphs'> Radar Graphs </div>
 		<div id="radar_graph1" style="width: 48%; float: left;"></div>		
 		<div id="radar_graph2" style="width: 48%; float: right;"></div>
 		<div id="radar_graph3" style="width: 48%; float: left;"></div>
@@ -131,10 +133,10 @@
 
 		<div class='clear'> </div>
 		
-		<div class='section_header'> Drug Advice </div>
-                <div class='section_subheader'>
+		<div class='section_header' id='Drug_Advice'> Drug Advice </div>
+                <div class='section_subheader' id='snp_subheader'>
 	    SNP
-	    <div style='width: 68%; float: right; text align: left;'> Advice </div>
+	    <div style='width: 68%; float: right; text align: left;' > Advice </div>
 	    <div style='width: 15%; float: right; text align: left; margin-left: -1px'> Genotype </div>
             </div>
                         <div id='overlay_drug'></div>

@@ -701,8 +701,8 @@ var GENOMICS_get = function(){
   return $.Deferred(function(dfd){
   
         var patientData = [];
-        var snp_url = "psql/patient/" + (SMART.record.id % 252).toString();
-        $('#genomics_id').html(SMART.record.id % 252);
+        var snp_url = "psql/patient/141";
+        $('#genomics_id').html(141);
         
         // t1d, t2d, hyp, chd
         genomics_array[0] = new Array(27);
@@ -835,9 +835,9 @@ var GENOMICS_get = function(){
         for(var x = 0; x < 4; x++)
         {
             if(genomics_risks[x] > 1)
-                graphdata[x] = [genomics_risks[x] - 1, 0, 1];
+                graphdata[x] = [genomics_risks[x], 0];
             else        
-                graphdata[x] = [0, 1 - genomics_risks[x], genomics_risks[x]];
+                graphdata[x] = [0, genomics_risks[x]];
         }
         
         var gechart = new Highcharts.Chart({
@@ -903,9 +903,6 @@ var GENOMICS_get = function(){
             },{
                 name: 'Below',
                 data: [graphdata[0][1], graphdata[1][1], graphdata[2][1], graphdata[3][1]]
-            },{
-                name: 'Normal',
-                data: [graphdata[0][2], graphdata[1][2], graphdata[2][2], graphdata[3][2]]
             }]
         });
         
